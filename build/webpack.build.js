@@ -5,10 +5,12 @@ module.exports = {
   mode: 'development',
   context: path.resolve(__dirname, '../src'),
   entry: {
-    home: './index.js',
+    'iplayer': './index.js',
   },
   output: {
-    filename: 'iplayer.js',
+    filename: '[name].js',
+    library: 'Iplayer',
+    libraryTarget: 'umd',
     clean: true
   },
   module: {

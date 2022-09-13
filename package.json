@@ -1,8 +1,15 @@
 {
   "name": "vue-iplayer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Video player base on video.js for vue2.",
   "main": "dist/iplayer.js",
+  "unpkg": "dist/iplayer.js",
+  "jsnext:main": "dist/iplayer.js",
+  "jspm": {
+    "main": "dist/iplayer.js",
+    "registry": "npm",
+    "format": "esm"
+  },
   "scripts": {
     "dev": "webpack-dev-server --config build/webpack.demo.js",
     "build": "webpack --config build/webpack.build.js"
@@ -26,7 +33,8 @@
     "video.js": "^7.20.2"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "repository": {
     "type": "git",

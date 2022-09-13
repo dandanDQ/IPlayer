@@ -5,7 +5,7 @@
 </template>
   
 <script>
-import Iplayer from '../src/index.js'
+import { Iplayer } from '../dist/iplayer.js'
 export default {
     components: {
         Iplayer
