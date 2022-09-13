@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --config build/webpack.demo.js",
     "build": "webpack --config build/webpack.build.js"
   },
-  "author": "dandanDQ",
+  "author": "dqdandan",
   "keywords": ["video", "player", "video.js", "vue2"],
   "license": "MIT",
   "devDependencies": {
