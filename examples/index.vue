@@ -1,14 +1,13 @@
 <template>
 <div>
-    <Iplayer />
+    <IPlayer />
 </div>
 </template>
-  
 <script>
-import { Iplayer } from '../dist/iplayer.js'
+// import { IPlayer } from '../src/index.js'
 export default {
-    components: {
-        Iplayer
-    }
+    // components: {
+    //     IPlayer
+    // }
 }
 </script>

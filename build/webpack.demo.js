@@ -41,7 +41,7 @@ module.exports = {
   plugins: [new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
         publicPath: 'auto',
-        title: 'Iplayer',
+        title: 'IPlayer',
         template: path.resolve(__dirname, '../public/index.html'),
     }),
   ],

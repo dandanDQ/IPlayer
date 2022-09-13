@@ -7,9 +7,17 @@ module.exports = {
   entry: {
     'iplayer': './index.js',
   },
+  externals: {
+    'video.js': {
+        root: 'videojs',
+        commonjs: 'video.js',
+        commonjs2: 'video.js',
+        amd: 'videojs'
+    },
+  },
   output: {
     filename: '[name].js',
-    library: 'Iplayer',
+    library: 'IPlayer',
     libraryTarget: 'umd',
     clean: true
   },
