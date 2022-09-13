@@ -1,5 +1,5 @@
 {
-  "name": "iplayer",
+  "name": "vue-iplayer",
   "version": "1.0.0",
   "description": "Video player base on video.js for vue2.",
   "main": "dist/iplayer.js",
