@@ -1,6 +1,6 @@
 <template>
 <div>
-    <IPlayer />
+    <IPlayer src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"/>
 </div>
 </template>
 <script>

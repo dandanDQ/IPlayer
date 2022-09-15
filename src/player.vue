@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="wrapper">
     <video ref="IPlayer" class="video-js"></video>
   </div>
 </template>
@@ -10,23 +10,32 @@ import 'video.js/dist/video-js.css';
 export default {
   name: 'IPlayer',
   props: {
+    src: {
+      type: String,
+      default: ''
+    },
     options: {
       type: Object,
       default() {
-        return {
-          autoplay: true,
-          controls: true,
-          liveui: true,
-          restoreEl: true,
-          sources: [
-            {
-              src: 'https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8',
-              type: 'application/x-mpegURL',
-            },
-          ],
-        };
-      },
+        return {}
+      }
     },
+    height: {
+      type: String,
+      default: '300'
+    },
+    width: {
+      type: String,
+      default: '500'
+    },
+    autoplay: {
+      type: Boolean,
+      default: true
+    },
+    controls: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -34,9 +43,25 @@ export default {
     };
   },
   mounted() {
-    this.player = videojs(this.$refs.IPlayer, this.options, () => {
+    const videojsOptions =  {
+      autoplay: this.autoplay,
+      controls: this.controls,
+      height: this.height,
+      width: this.width,
+      sources: [
+        {
+          src: this.src,
+        },
+      ],
+    }
+
+    // 做一个简单的合并，兼容之前的逻辑
+    const options = Object.assign({}, videojsOptions, this.options)
+
+    this.player = videojs(this.$refs.IPlayer, options, () => {
       this.player.log('onPlayerReady', this);
     });
+
   },
   beforeDestroy() {
     if (this.player) {
@@ -45,3 +70,6 @@ export default {
   },
 };
 </script>
+<style>
+
+</style>
