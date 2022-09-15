@@ -49,7 +49,7 @@ new Vue({
 | width | width of the video. | string | — | 500 |
 | autoplay | autoplay when loaded | boolean | — | true |
 | controls | show control bar | boolean | — | true |
-
+| muted | muted when starting playing | boolean | — | true |
 ## Plan
 
 - [ ] 将进度条挪控制栏顶部（解决小屏播放时进度条太窄问题）

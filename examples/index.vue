@@ -4,10 +4,10 @@
 </div>
 </template>
 <script>
-// import { IPlayer } from '../src/index.js'
+import { IPlayer } from '../src/index.js'
 export default {
-    // components: {
-    //     IPlayer
-    // }
+    components: {
+        IPlayer
+    }
 }
 </script>

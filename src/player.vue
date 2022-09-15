@@ -35,6 +35,10 @@ export default {
     controls: {
       type: Boolean,
       default: true
+    },
+    muted: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -48,6 +52,7 @@ export default {
       controls: this.controls,
       height: this.height,
       width: this.width,
+      muted: this.muted,
       sources: [
         {
           src: this.src,
