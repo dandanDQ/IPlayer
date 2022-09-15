@@ -78,11 +78,9 @@ const main = async () => {
   await exec(`git commit -m "feat: release version ${version}"`)
   await exec(`git push`)
 
-
+  // 3. 构建 & 发布
   await exec(`npm run build`)
   await exec(`npm publish`)
-
-
 }
 
 main()
