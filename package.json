@@ -1,6 +1,6 @@
 {
   "name": "vue-iplayer",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Video player base on video.js for vue2.",
   "main": "dist/iplayer.js",
   "unpkg": "dist/iplayer.js",
@@ -13,10 +13,15 @@
   "scripts": {
     "dev": "webpack-dev-server --config build/webpack.demo.js",
     "build": "webpack --config build/webpack.build.js",
-    "publish": "npm run build && npm publish"
+    "release": "node ./build/release.js"
   },
   "author": "dqdandan",
-  "keywords": ["video", "player", "video.js", "vue2"],
+  "keywords": [
+    "video",
+    "player",
+    "video.js",
+    "vue2"
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-loader": "^8.2.5",
