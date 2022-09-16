@@ -1,14 +1,23 @@
 <template>
   <div ref="wrapper">
     <video ref="IPlayer" class="video-js"></video>
+    <!-- <div style=" background: blue" class="tool-bar">
+      <Icon name="play" />
+      <Icon name="play" />
+    </div> -->
   </div>
 </template>
 
 <script>
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import Icon from './components/Icon.vue'
+
 export default {
   name: 'IPlayer',
+  components: {
+    Icon,
+  },
   props: {
     src: {
       type: String,
@@ -44,6 +53,7 @@ export default {
   data() {
     return {
       player: null,
+      el: null,
     };
   },
   mounted() {
@@ -75,6 +85,6 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 
 </style>

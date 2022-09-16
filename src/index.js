@@ -1,7 +1,7 @@
 import IPlayer from './player.vue'
 
 const install = (app) => {
-    app.component('IPlayer', IPlayer)
+  app.component('IPlayer', IPlayer)
 }
 
 const VueIplayer = { IPlayer, install }
