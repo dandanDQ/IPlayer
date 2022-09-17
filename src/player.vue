@@ -1,27 +1,40 @@
 <template>
   <div ref="IPlayer" class="iplayer-container">
-    <video ref="video-el"></video>
+    <video ref="video-el" @click="handlePlay"></video>
     <div class="control-bar">
-      <Icon name="rewind" @click="handleTimeChange(-10)" />
-      <Icon
-        name="pause"
-        size="18"
-        @click="handlePause"
-        v-if="status.playing"
-        hint="pause"
-      />
-      <Icon name="play" @click="handlePlay" v-else size="18" hint="play" />
-      <Icon name="fastforward" @click="handleTimeChange(10)" />
-      <Icon
-        name="mute"
-        hint="muted"
-        @click="handleMuted(false)"
-        v-if="status.muted"
-      />
-      <Icon name="sound" @click="handleMuted(true)" v-else />
-      <Icon name="fullscreen" />
-      <Icon name="loop" />
-      <Icon name="noloop" />
+      <div class="left">
+        <Icon name="rewind" @click="handleTimeChange(-10)" />
+        <Icon
+          name="pause"
+          size="18"
+          @click="handlePlay"
+          v-if="status.playing"
+          hint="pause"
+        />
+        <Icon name="play" @click="handlePlay" v-else size="18" hint="play" />
+        <Icon name="fastforward" @click="handleTimeChange(10)" />
+        <span class="info">
+          {{ status.currentTime }} / {{ status.duration }}
+        </span>
+      </div>
+      <div class="right">
+        <Icon
+          name="mute"
+          hint="muted"
+          @click="handleMuted(false)"
+          v-if="status.muted"
+        />
+        <Icon name="sound" @click="handleMuted(true)" v-else />
+        <Icon
+          name="cancelfullscreen"
+          @click="handleExitFullScreen"
+          v-if="status.fullscreen"
+        />
+        <Icon name="fullscreen" @click="handleFullScreen" v-else />
+
+        <Icon name="loop" />
+        <Icon name="noloop" />
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +43,7 @@
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import Icon from './components/Icon.vue';
+import { parseTime } from './utils/index.js';
 
 export default {
   name: 'IPlayer',
@@ -75,6 +89,9 @@ export default {
       status: {
         playing: true,
         muted: true,
+        fullscreen: false,
+        currentTime: '0:00',
+        duration: '50:00',
       },
     };
   },
@@ -86,8 +103,8 @@ export default {
       const videojsOptions = {
         autoplay: this.autoplay,
         controls: false,
-        height: this.height,
-        width: this.width,
+        // height: this.height,
+        // width: this.width,
         muted: this.muted,
         sources: [
           {
@@ -105,13 +122,23 @@ export default {
       this.player = videojs(this.$refs['video-el'], options, () => {
         this.player.log('onPlayerReady', this);
       });
-
-      this.video = this.player.el_?.childNodes?.[0];
+      // 修改样式成自适应
+      const el = this.player.el_;
+      el.style.height = '100%';
+      el.style.width = '100%';
+      const video = this.player.el_?.childNodes?.[0];
+      video.style.height = '100%';
+      video.style.width = '100%';
+      this.video = video;
       this.handleEvents();
     },
     handlePlay() {
-      this.video.play();
-      this.status.playing = true;
+      if (this.status.playing) {
+        this.video.pause();
+      } else {
+        this.video.play();
+      }
+      this.status.playing = !this.status.playing;
     },
     handlePause() {
       this.video.pause();
@@ -139,6 +166,23 @@ export default {
 
       this.video.addEventListener('ended', () => {
         this.status.playing = false;
+      });
+
+      this.$refs.IPlayer.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement !== null) {
+          // 全屏模式
+          this.status.fullscreen = true;
+        } else {
+          this.status.fullscreen = false;
+        }
+      });
+
+      this.video.addEventListener('durationchange', (e) => {
+        this.status.duration = parseTime(this.video.duration);
+      });
+
+      this.video.addEventListener('timeupdate', () => {
+        this.status.currentTime = parseTime(this.video.currentTime);
       });
 
       // 监听并透传所有事件
@@ -173,6 +217,14 @@ export default {
         });
       }
     },
+    handleFullScreen() {
+      this.$refs.IPlayer.requestFullscreen();
+      this.status.fullscreen = true;
+    },
+    handleExitFullScreen() {
+      document.exitFullscreen();
+      this.status.fullscreen = false;
+    },
   },
   beforeDestroy() {
     if (this.player) {
@@ -183,11 +235,29 @@ export default {
 </script>
 <style lang="scss" scoped>
 .iplayer-container {
-  border: 3px solid green;
+  position: relative;
   .control-bar {
+    color: white;
     background: rgb(6, 32, 63);
     display: flex;
     padding: 6px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    .left,
+    .right {
+      display: flex;
+      align-items: center;
+    }
+    .info {
+      font-size: 12px;
+      line-height: 20px;
+      vertical-align: middle;
+      color: rgb(198, 198, 198);
+    }
   }
 }
 </style>
