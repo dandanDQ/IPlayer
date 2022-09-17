@@ -1,5 +1,9 @@
 <template>
-  <div class="icon" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+  <div
+    class="icon"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
     <svg :width="size" :height="size">
       <use :xlink:href="`#${name}`"></use>
     </svg>
@@ -7,48 +11,49 @@
   </div>
 </template>
 <script>
-const importAll = (requireContext) => requireContext.keys().forEach(requireContext);
-try { 
-  importAll(require.context('../assets/icons', true, /\.svg$/))
-} catch(err) {
-  consoel.log(err)
+const importAll = (requireContext) =>
+  requireContext.keys().forEach(requireContext);
+try {
+  importAll(require.context('../assets/icons', true, /\.svg$/));
+} catch (err) {
+  consoel.log(err);
 }
 export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     size: {
       type: String,
-      default: '20'
-    }
+      default: '20',
+    },
   },
   name: 'Icon',
   data() {
     return {
-      showHint: false
-    }
+      showHint: false,
+    };
   },
   methods: {
     handleMouseEnter() {
-      this.showHint = true
+      this.showHint = true;
     },
     handleMouseLeave() {
-      this.showHint = false
-    }
-  }
-}
+      this.showHint = false;
+    },
+  },
+};
 </script>
 <style lang="scss">
-  .icon {
-    position: relative;
-    cursor: pointer;
-    .hint {
-      position: absolute;
-      bottom: -10px;
-      background-color: aliceblue;
-      border-radius: 4px;
-    }
+.icon {
+  position: relative;
+  cursor: pointer;
+  .hint {
+    position: absolute;
+    bottom: -10px;
+    background-color: aliceblue;
+    border-radius: 4px;
   }
+}
 </style>

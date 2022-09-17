@@ -1,8 +1,9 @@
-#  IPlayer
+# IPlayer
 
 🤩 IPlayer —— A hls video player base on video.js for vue2.
 
 ## Install
+
 ```shell
 npm install -S vue-iplayer
 ```
@@ -10,6 +11,7 @@ npm install -S vue-iplayer
 ## Quick Start
 
 ### use as component
+
 ```js
 <template>
   <div>
@@ -27,29 +29,33 @@ export default {
 ```
 
 ### use in global
-```js
-import Vue from 'vue'
-import App from './index.vue'
-import IPlayer from 'vue-iplayer'
 
-Vue.config.productionTip = false
-Vue.use(IPlayer)
+```js
+import Vue from 'vue';
+import App from './index.vue';
+import IPlayer from 'vue-iplayer';
+
+Vue.config.productionTip = false;
+Vue.use(IPlayer);
 
 new Vue({
-    render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount('#app');
 ```
 
 ## Usage
+
 ### Attributes
-| Attribute      | Description          | Type      | Accepted Values       | Default  |
-|---------- |-------------- |---------- |--------------------------------  |-------- |
-| src     | the src of video, such as 'https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8'      | string | — | — |
-| height | height of the video. | string | — | 300 |
-| width | width of the video. | string | — | 500 |
-| autoplay | autoplay when loaded | boolean | — | true |
-| controls | show control bar | boolean | — | true |
-| muted | muted when starting playing | boolean | — | true |
+
+| Attribute | Description                                                                          | Type    | Accepted Values | Default |
+| --------- | ------------------------------------------------------------------------------------ | ------- | --------------- | ------- |
+| src       | the src of video, such as 'https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8' | string  | —               | —       |
+| height    | height of the video.                                                                 | string  | —               | 300     |
+| width     | width of the video.                                                                  | string  | —               | 500     |
+| autoplay  | autoplay when loaded                                                                 | boolean | —               | true    |
+| controls  | show control bar                                                                     | boolean | —               | true    |
+| muted     | muted when starting playing                                                          | boolean | —               | true    |
+
 ## Plan
 
 - [ ] 将进度条挪控制栏顶部（解决小屏播放时进度条太窄问题）
