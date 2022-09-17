@@ -1,10 +1,10 @@
 <template>
   <div ref="wrapper">
     <video ref="IPlayer" class="video-js"></video>
-    <!-- <div style=" background: blue" class="tool-bar">
-      <Icon name="play" />
-      <Icon name="play" />
-    </div> -->
+    <div class="tool-bar">
+      <Icon name="play" @click.native="handlePlay"/>
+      <Icon name="pause" size="18" @click.native="handlePause"/>
+    </div>
   </div>
 </template>
 
@@ -53,30 +53,42 @@ export default {
   data() {
     return {
       player: null,
-      el: null,
+      video: null,
     };
   },
   mounted() {
-    const videojsOptions =  {
-      autoplay: this.autoplay,
-      controls: this.controls,
-      height: this.height,
-      width: this.width,
-      muted: this.muted,
-      sources: [
-        {
-          src: this.src,
-        },
-      ],
+    this.init()
+  },
+  methods: {
+    init() {
+      const videojsOptions =  {
+        autoplay: this.autoplay,
+        controls: this.controls,
+        height: this.height,
+        width: this.width,
+        muted: this.muted,
+        sources: [
+          {
+            src: this.src,
+          },
+        ],
+      }
+
+      // 做一个简单的合并，兼容之前的逻辑
+      const options = Object.assign({}, videojsOptions, this.options)
+
+      this.player = videojs(this.$refs.IPlayer, options, () => {
+        this.player.log('onPlayerReady', this);
+      });
+
+      this.video = this.player.el_?.childNodes?.[0]
+    },
+    handlePlay() {
+      this.video.play()
+    },
+    handlePause() {
+      this.video.pause()
     }
-
-    // 做一个简单的合并，兼容之前的逻辑
-    const options = Object.assign({}, videojsOptions, this.options)
-
-    this.player = videojs(this.$refs.IPlayer, options, () => {
-      this.player.log('onPlayerReady', this);
-    });
-
   },
   beforeDestroy() {
     if (this.player) {
@@ -86,5 +98,7 @@ export default {
 };
 </script>
 <style scoped>
-
+.tool-bar {
+  background: rgb(52, 81, 94);
+}
 </style>

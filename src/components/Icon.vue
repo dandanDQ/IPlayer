@@ -13,11 +13,11 @@ try {
 export default {
   props: {
     name: {
-      type: 'String',
+      type: String,
       default: ''
     },
     size: {
-      type: 'String',
+      type: String,
       default: '20'
     }
   },
