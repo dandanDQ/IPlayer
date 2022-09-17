@@ -27,6 +27,8 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
+    "node-sass": "^7.0.3",
+    "sass-loader": "^13.0.2",
     "svg-sprite-loader": "^6.0.11",
     "vue": "^2.7.10",
     "vue-loader": "^15.9.8",
