@@ -1,7 +1,7 @@
 <template>
   <div ref="wrapper">
     <video ref="IPlayer" class="video-js"></video>
-    <div class="tool-bar">
+    <div class="control-car">
       <Icon name="play" @click.native="handlePlay" />
       <Icon name="pause" size="18" @click.native="handlePause" />
     </div>
@@ -98,7 +98,9 @@ export default {
 };
 </script>
 <style scoped>
-.tool-bar {
-  background: rgb(52, 81, 94);
+.control-car {
+  background: rgb(25, 62, 79);
+  display: flex;
+  padding: 6px;
 }
 </style>
