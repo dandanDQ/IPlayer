@@ -5,40 +5,65 @@
       @dblclick="handleDoubleClick"
       @click="handleSingleClick"
     ></video>
-    <div class="control-bar">
-      <div class="left">
-        <Icon name="rewind" @click="handleTimeChange(-10)" />
-        <Icon
-          name="pause"
-          size="18"
-          @click="handlePlay"
-          v-if="status.playing"
-          hint="pause"
-        />
-        <Icon name="play" @click="handlePlay" v-else size="18" hint="播放" />
-        <Icon name="fastforward" @click="handleTimeChange(10)" />
-        <span class="info">
-          {{ status.currentTime }} / {{ status.duration }}
-        </span>
-      </div>
-      <div class="right">
-        <Icon
-          name="mute"
-          hint="muted"
-          @click="handleMuted(false)"
-          v-if="status.muted"
-        />
-        <Icon name="sound" @click="handleMuted(true)" v-else />
-        <Icon
-          name="cancelfullscreen"
-          @click="handleFullScreen"
-          v-if="status.fullscreen"
-        />
-        <Icon name="fullscreen" @click="handleFullScreen" v-else />
+    <div class="control-area">
+      <!-- when hover beyond the area, the control bar will show. -->
+      <div class="control-bar">
+        <div
+          class="progress-bar"
+          ref="progress-bar"
+          @click="handleProgressClick"
+        >
+          <div
+            class="progress"
+            :style="`width: ${(status.progress / status.duration) * 100}%`"
+          ></div>
+          <div
+            class="current"
+            :style="`width: ${(status.currentTime / status.duration) * 100}%`"
+          ></div>
+        </div>
+        <div class="tool-bar">
+          <div class="left">
+            <Icon name="rewind" @click="handleTimeChange(-10)" />
+            <Icon
+              name="pause"
+              size="18"
+              @click="handlePlay"
+              v-if="status.playing"
+              hint="pause"
+            />
+            <Icon
+              name="play"
+              @click="handlePlay"
+              v-else
+              size="18"
+              hint="播放"
+            />
+            <Icon name="fastforward" @click="handleTimeChange(10)" />
+            <span class="info">
+              {{ status.currentTimeText }} / {{ status.durationText }}
+            </span>
+          </div>
+          <div class="right">
+            <Icon
+              name="mute"
+              hint="muted"
+              @click="handleMuted(false)"
+              v-if="status.muted"
+            />
+            <Icon name="sound" @click="handleMuted(true)" v-else />
+            <Icon
+              name="cancelfullscreen"
+              @click="handleFullScreen"
+              v-if="status.fullscreen"
+            />
+            <Icon name="fullscreen" @click="handleFullScreen" v-else />
 
-        <Icon name="loop" />
-        <Icon name="noloop" />
-        <Icon name="shot" hint="截图" />
+            <Icon name="loop" />
+            <Icon name="noloop" />
+            <Icon name="shot" hint="截图" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -95,8 +120,12 @@ export default {
         playing: true,
         muted: true,
         fullscreen: false,
-        currentTime: '0:00',
-        duration: '50:00',
+        currentTime: 0,
+        currentTimeText: '--:--:--',
+        duration: 1,
+        durationText: '--:--:--',
+        progress: 0,
+        currentTimeWidth: '0%',
       },
       timer: null,
     };
@@ -189,11 +218,24 @@ export default {
       });
 
       this.video.addEventListener('durationchange', (e) => {
-        this.status.duration = parseTime(this.video.duration);
+        this.status.duration = this.video.duration;
+        this.status.durationText = parseTime(this.video.duration);
       });
 
       this.video.addEventListener('timeupdate', () => {
-        this.status.currentTime = parseTime(this.video.currentTime);
+        this.status.currentTime = this.video.currentTime;
+        this.status.currentTimeText = parseTime(this.video.currentTime);
+      });
+
+      this.video.addEventListener('progress', (e) => {
+        try {
+          const len = this.video.buffered.length;
+          if (len) {
+            this.status.progress = this.video.buffered.end(len - 1);
+          }
+        } catch (e) {
+          console.error(e);
+        }
       });
 
       // 监听并透传所有事件
@@ -250,33 +292,89 @@ export default {
       this.timer = null;
       this.handleFullScreen();
     },
+    handleProgressClick(e) {
+      // 找到所在位置
+      console.log(e);
+      const { offsetX } = e;
+      this.video.currentTime =
+        this.video.duration *
+        (offsetX / this.$refs['progress-bar'].clientWidth);
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 .iplayer-container {
   position: relative;
-  .control-bar {
-    color: white;
-    background: rgb(6, 32, 63);
-    display: flex;
-    padding: 6px;
+
+  .control-area {
+    // border: 1px solid white;
     position: absolute;
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    justify-content: space-between;
-    align-items: center;
-    .left,
-    .right {
-      display: flex;
-      align-items: center;
+    height: 100px;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &:hover {
+      .control-bar {
+        .tool-bar {
+          display: flex;
+        }
+      }
     }
-    .info {
-      font-size: 12px;
-      line-height: 20px;
-      vertical-align: middle;
-      color: rgb(198, 198, 198);
+
+    .control-bar {
+      .progress-bar {
+        position: relative;
+        height: 6px;
+        background-color: rgb(45, 45, 45);
+
+        cursor: pointer;
+        .current {
+          position: absolute;
+          top: 1px;
+          left: 0;
+          height: 4px;
+          background: #00b2ff;
+          border-radius: 2px;
+          width: 100%;
+          z-index: 2;
+        }
+        .progress {
+          position: absolute;
+          top: 1px;
+          left: 0;
+          height: 4px;
+          background: grey;
+          width: 100%;
+          z-index: 1;
+        }
+      }
+      .tool-bar {
+        display: none;
+        color: white;
+        background: rgb(6, 32, 63);
+        // display: flex;
+        padding: 6px;
+        justify-content: space-between;
+        align-items: center;
+
+        .left,
+        .right {
+          display: flex;
+          align-items: center;
+        }
+        .info {
+          font-size: 12px;
+          line-height: 20px;
+          vertical-align: middle;
+          color: rgb(198, 198, 198);
+        }
+      }
     }
   }
 }
