@@ -1,9 +1,9 @@
 <template>
-  <div class="icon">
+  <div class="icon" @click="$emit('click')">
     <svg :width="size" :height="size">
       <use :xlink:href="`#${name}`"></use>
     </svg>
-    <div class="hint">{{ hint }}</div>
+    <div class="hint" v-if="hint">{{ hint }}</div>
   </div>
 </template>
 <script>
@@ -22,11 +22,11 @@ export default {
     },
     size: {
       type: String,
-      default: '20',
+      default: '18',
     },
     hint: {
       type: String,
-      default: 'play',
+      default: '',
     },
   },
   name: 'Icon',
@@ -67,7 +67,7 @@ export default {
     z-index: 1;
     padding: 6px;
     opacity: 0;
-    transition: all 2s ease;
+    transition: all 3s ease;
     top: -40px;
     font-size: 12px;
     border-radius: 3px;
