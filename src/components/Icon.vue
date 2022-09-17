@@ -1,7 +1,10 @@
 <template>
-  <svg :width="size" :height="size">
-    <use :xlink:href="`#${name}`"></use>
-  </svg>
+  <div class="icon" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+    <svg :width="size" :height="size">
+      <use :xlink:href="`#${name}`"></use>
+    </svg>
+    <div class="hint" v-if="showHint">提示文字</div>
+  </div>
 </template>
 <script>
 const importAll = (requireContext) => requireContext.keys().forEach(requireContext);
@@ -21,11 +24,31 @@ export default {
       default: '20'
     }
   },
-  name: 'Icon'
+  name: 'Icon',
+  data() {
+    return {
+      showHint: false
+    }
+  },
+  methods: {
+    handleMouseEnter() {
+      this.showHint = true
+    },
+    handleMouseLeave() {
+      this.showHint = false
+    }
+  }
 }
 </script>
 <style lang="scss">
-  svg {
-    border: 1px solid red;
+  .icon {
+    position: relative;
+    cursor: pointer;
+    .hint {
+      position: absolute;
+      bottom: -10px;
+      background-color: aliceblue;
+      border-radius: 4px;
+    }
   }
 </style>
