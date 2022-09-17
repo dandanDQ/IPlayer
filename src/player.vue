@@ -1,6 +1,10 @@
 <template>
   <div ref="IPlayer" class="iplayer-container">
-    <video ref="video-el" @click="handlePlay"></video>
+    <video
+      ref="video-el"
+      @dblclick="handleDoubleClick"
+      @click="handleSingleClick"
+    ></video>
     <div class="control-bar">
       <div class="left">
         <Icon name="rewind" @click="handleTimeChange(-10)" />
@@ -11,7 +15,7 @@
           v-if="status.playing"
           hint="pause"
         />
-        <Icon name="play" @click="handlePlay" v-else size="18" hint="play" />
+        <Icon name="play" @click="handlePlay" v-else size="18" hint="播放" />
         <Icon name="fastforward" @click="handleTimeChange(10)" />
         <span class="info">
           {{ status.currentTime }} / {{ status.duration }}
@@ -27,13 +31,14 @@
         <Icon name="sound" @click="handleMuted(true)" v-else />
         <Icon
           name="cancelfullscreen"
-          @click="handleExitFullScreen"
+          @click="handleFullScreen"
           v-if="status.fullscreen"
         />
         <Icon name="fullscreen" @click="handleFullScreen" v-else />
 
         <Icon name="loop" />
         <Icon name="noloop" />
+        <Icon name="shot" hint="截图" />
       </div>
     </div>
   </div>
@@ -93,10 +98,16 @@ export default {
         currentTime: '0:00',
         duration: '50:00',
       },
+      timer: null,
     };
   },
   mounted() {
     this.init();
+  },
+  beforeDestroy() {
+    if (this.player) {
+      this.player.dispose();
+    }
   },
   methods: {
     init() {
@@ -218,18 +229,27 @@ export default {
       }
     },
     handleFullScreen() {
-      this.$refs.IPlayer.requestFullscreen();
-      this.status.fullscreen = true;
+      if (this.status.fullscreen) {
+        document.exitFullscreen();
+      } else {
+        this.$refs.IPlayer.requestFullscreen();
+      }
+      this.status.fullscreen = !this.status.fullscreen;
     },
-    handleExitFullScreen() {
-      document.exitFullscreen();
-      this.status.fullscreen = false;
+    handleSingleClick() {
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          this.handlePlay();
+          clearTimeout(this.timer);
+          this.timer = null;
+        }, 300);
+      }
     },
-  },
-  beforeDestroy() {
-    if (this.player) {
-      this.player.dispose();
-    }
+    handleDoubleClick() {
+      clearTimeout(this.timer);
+      this.timer = null;
+      this.handleFullScreen();
+    },
   },
 };
 </script>

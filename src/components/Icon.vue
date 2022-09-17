@@ -71,6 +71,8 @@ export default {
     top: -40px;
     font-size: 12px;
     border-radius: 3px;
+    width: 100%;
+    text-align: center;
     &::before {
       content: '';
       border-top: 4px solid white;
