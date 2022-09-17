@@ -24,3 +24,8 @@ export default {
   name: 'Icon'
 }
 </script>
+<style lang="scss">
+  svg {
+    border: 1px solid red;
+  }
+</style>
