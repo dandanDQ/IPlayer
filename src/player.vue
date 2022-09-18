@@ -30,7 +30,7 @@
               size="18"
               @click="handlePlay"
               v-if="status.playing"
-              hint="pause"
+              hint="暂停"
             />
             <Icon
               name="play"
@@ -341,8 +341,18 @@ export default {
           height: 4px;
           background: #00b2ff;
           border-radius: 2px;
-          width: 100%;
+          width: 0%;
           z-index: 2;
+          &::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            background-color: #00b2ff;
+            border-radius: 50%;
+          }
         }
         .progress {
           position: absolute;
@@ -373,6 +383,8 @@ export default {
           line-height: 20px;
           vertical-align: middle;
           color: rgb(198, 198, 198);
+          user-select: none;
+          margin: 0 6px;
         }
       }
     }
