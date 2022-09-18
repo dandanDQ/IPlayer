@@ -21,7 +21,7 @@
             class="current"
             :style="`width: ${(status.currentTime / status.duration) * 100}%`"
           >
-            <div class="current-dot" draggable="true"></div>
+            <div class="current-dot"></div>
           </div>
         </div>
         <div class="tool-bar">
@@ -347,6 +347,7 @@ export default {
           border-radius: 2px;
           width: 0%;
           z-index: 2;
+          transition: all 0.4s ease;
           .current-dot {
             position: absolute;
             top: -2px;
@@ -365,6 +366,7 @@ export default {
           background: grey;
           width: 100%;
           z-index: 1;
+          transition: all 0.4s ease;
         }
       }
       .tool-bar {
