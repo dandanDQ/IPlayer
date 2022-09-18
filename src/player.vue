@@ -20,7 +20,9 @@
           <div
             class="current"
             :style="`width: ${(status.currentTime / status.duration) * 100}%`"
-          ></div>
+          >
+            <div class="current-dot" draggable="true"></div>
+          </div>
         </div>
         <div class="tool-bar">
           <div class="left">
@@ -293,12 +295,14 @@ export default {
       this.handleFullScreen();
     },
     handleProgressClick(e) {
-      // 找到所在位置
-      console.log(e);
-      const { offsetX } = e;
-      this.video.currentTime =
-        this.video.duration *
-        (offsetX / this.$refs['progress-bar'].clientWidth);
+      // clientX: the clicked element's x-coordinate
+      // left: this progress bar's x-coordinate
+      // width: this progress bar's total width
+      // formula：(clientX - left) / width
+      const { clientX } = e;
+      const { left, width } =
+        this.$refs['progress-bar'].getBoundingClientRect();
+      this.video.currentTime = this.video.duration * ((clientX - left) / width);
     },
   },
 };
@@ -343,8 +347,7 @@ export default {
           border-radius: 2px;
           width: 0%;
           z-index: 2;
-          &::before {
-            content: '';
+          .current-dot {
             position: absolute;
             top: -2px;
             right: -4px;
