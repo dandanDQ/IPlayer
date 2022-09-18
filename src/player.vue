@@ -8,21 +8,23 @@
     <div class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar">
-        <div
-          class="progress-bar"
-          ref="progress-bar"
-          @click="handleProgressClick"
-        >
+        <div class="progress-bar" ref="progress-bar">
           <div
             class="progress"
             :style="`width: ${(status.progress / status.duration) * 100}%`"
           ></div>
-          <div
+          <!-- <div
             class="current"
             :style="`width: ${(status.currentTime / status.duration) * 100}%`"
-          >
-            <div class="current-dot"></div>
-          </div>
+          ></div> -->
+          <input
+            ref="current"
+            class="current-input"
+            type="range"
+            min="0"
+            :max="max"
+            @input="handleProgressInput"
+          />
         </div>
         <div class="tool-bar">
           <div class="left">
@@ -76,7 +78,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import Icon from './components/Icon.vue';
 import { parseTime } from './utils/index.js';
-
+import throttle from 'lodash/throttle';
 export default {
   name: 'IPlayer',
   components: {
@@ -130,6 +132,7 @@ export default {
         currentTimeWidth: '0%',
       },
       timer: null,
+      max: 1000,
     };
   },
   mounted() {
@@ -224,10 +227,15 @@ export default {
         this.status.durationText = parseTime(this.video.duration);
       });
 
-      this.video.addEventListener('timeupdate', () => {
-        this.status.currentTime = this.video.currentTime;
-        this.status.currentTimeText = parseTime(this.video.currentTime);
-      });
+      this.video.addEventListener(
+        'timeupdate',
+        throttle(() => {
+          this.status.currentTime = this.video.currentTime;
+          this.$refs.current.value =
+            this.max * (this.video.currentTime / this.video.duration);
+          this.status.currentTimeText = parseTime(this.video.currentTime);
+        }, 1000),
+      );
 
       this.video.addEventListener('progress', (e) => {
         try {
@@ -294,16 +302,11 @@ export default {
       this.timer = null;
       this.handleFullScreen();
     },
-    handleProgressClick(e) {
-      // clientX: the clicked element's x-coordinate
-      // left: this progress bar's x-coordinate
-      // width: this progress bar's total width
-      // formula：(clientX - left) / width
-      const { clientX } = e;
-      const { left, width } =
-        this.$refs['progress-bar'].getBoundingClientRect();
-      this.video.currentTime = this.video.duration * ((clientX - left) / width);
-    },
+    handleProgressInput: throttle(function (e) {
+      const { srcElement } = e;
+      this.video.currentTime =
+        this.video.duration * (srcElement.value / this.max);
+    }, 200),
   },
 };
 </script>
@@ -345,18 +348,30 @@ export default {
           height: 4px;
           background: #00b2ff;
           border-radius: 2px;
-          width: 0%;
+          width: 100%;
           z-index: 2;
           transition: all 0.4s ease;
-          .current-dot {
-            position: absolute;
-            top: -2px;
-            right: -4px;
-            width: 8px;
-            height: 8px;
-            background-color: #00b2ff;
-            border-radius: 50%;
-          }
+        }
+        .current-input {
+          position: absolute;
+          top: 1px;
+          left: 0;
+          cursor: pointer;
+          // -webkit-appearance: none;
+          // appearance: none;
+          background: 0 0;
+          border: 0;
+          border-radius: 26px;
+          color: #00b2ff;
+          display: block;
+          height: 6px;
+
+          margin: 0;
+          min-width: 0;
+          padding: 0;
+          transition: box-shadow 0.3s ease;
+          width: 100%;
+          z-index: 5;
         }
         .progress {
           position: absolute;
