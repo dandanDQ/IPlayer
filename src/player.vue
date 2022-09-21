@@ -5,14 +5,20 @@
       @dblclick="handleDoubleClick"
       @click="handleSingleClick"
     ></video>
-    <div class="control-area">
+    <div
+      class="control-area"
+      :style="{
+        '--progress': `${(status.progress / status.duration) * 100}%`,
+        '--current': `${(status.currentTime / status.duration) * 100}%`,
+      }"
+    >
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar">
         <div class="progress-bar" ref="progress-bar">
-          <div
+          <!-- <div
             class="progress"
             :style="`width: ${(status.progress / status.duration) * 100}%`"
-          ></div>
+          ></div> -->
           <!-- <div
             class="current"
             :style="`width: ${(status.currentTime / status.duration) * 100}%`"
@@ -313,7 +319,7 @@ export default {
 <style lang="scss" scoped>
 .iplayer-container {
   position: relative;
-
+  $current: 20%;
   .control-area {
     // border: 1px solid white;
     position: absolute;
@@ -372,7 +378,42 @@ export default {
           transition: box-shadow 0.3s ease;
           width: 100%;
           z-index: 5;
+
+          &::-webkit-slider-runnable-track {
+            background-color: hsla(0, 0%, 100%, 0.25);
+            background: 0 0;
+            background-image: linear-gradient(
+              to right,
+              #0066ff 0% var(--current, 0),
+              rgb(212, 212, 212) var(--current, 0) var(--progress, 0),
+              transparent var(--progress, 0)
+            );
+            border: 0;
+            border-radius: 2.5px;
+            height: 4px;
+
+            -webkit-transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
+          }
+
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #fff;
+            border-radius: 100%;
+
+            height: 12px;
+            margin-top: -5px;
+
+            position: relative;
+            -webkit-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+            width: 12px;
+          }
         }
+
         .progress {
           position: absolute;
           top: 1px;
