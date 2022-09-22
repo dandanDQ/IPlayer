@@ -7,6 +7,7 @@
     ></video>
 
     <div
+      v-if="controls"
       class="control-area"
       :style="{
         '--progress': `${(status.progress / status.duration) * 100}%`,
@@ -35,7 +36,11 @@
         </div>
         <div class="tool-bar">
           <div class="left">
-            <Icon name="rewind" @click="handleTimeChange(-10)" />
+            <Icon
+              name="rewind"
+              @click="handleTimeChange(-step)"
+              v-if="controlsList.includes('rewind')"
+            />
             <Icon
               name="pause"
               size="18"
@@ -50,7 +55,7 @@
               size="18"
               hint="播放"
             />
-            <Icon name="fastforward" @click="handleTimeChange(10)" />
+            <Icon name="fastforward" @click="handleTimeChange(step)" />
             <span class="info">
               {{ status.currentTimeText }} / {{ status.durationText }}
             </span>
@@ -73,6 +78,7 @@
               :value="status.volume"
             />
             <Icon
+              v-if="controlsList.includes('shot')"
               name="shot"
               hint="截图"
               @click="handleShot"
@@ -90,20 +96,23 @@
                 />
               </template>
             </Icon>
-            <Icon
-              name="cancelfullscreen"
-              @click="handleFullScreen"
-              v-if="status.fullscreen"
-            />
-            <Icon name="fullscreen" @click="handleFullScreen" v-else />
-
-            <Icon
-              name="noloop"
-              @click="handleLoop"
-              v-if="status.loop"
-              hint="关闭循环"
-            />
-            <Icon name="loop" @click="handleLoop" v-else hint="开启循环" />
+            <template v-if="controlsList.includes('fullscreen')">
+              <Icon
+                name="cancelfullscreen"
+                @click="handleFullScreen"
+                v-if="status.fullscreen"
+              />
+              <Icon name="fullscreen" @click="handleFullScreen" v-else />
+            </template>
+            <template v-if="controlsList.includes('loop')">
+              <Icon
+                name="noloop"
+                @click="handleLoop"
+                v-if="status.loop"
+                hint="关闭循环"
+              />
+              <Icon name="loop" @click="handleLoop" v-else hint="开启循环" />
+            </template>
           </div>
         </div>
       </div>
@@ -157,6 +166,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    controlsList: {
+      type: Array,
+      default() {
+        return ['rewind', 'fastforward', 'fullscreen'];
+      },
+    },
+    step: {
+      type: Number,
+      default: 10,
+    },
   },
   data() {
     return {
@@ -178,6 +197,8 @@ export default {
       timer: null,
       max: 1000,
       shotImg: '',
+
+      showControls: false,
     };
   },
   mounted() {
