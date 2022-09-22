@@ -5,6 +5,7 @@
       @dblclick="handleDoubleClick"
       @click="handleSingleClick"
     ></video>
+
     <div
       class="control-area"
       :style="{
@@ -62,6 +63,33 @@
               v-if="status.muted"
             />
             <Icon name="sound" @click="handleMuted(true)" v-else />
+            <input
+              type="range"
+              @change="handleVolumeChange"
+              min="0"
+              max="1"
+              step="0.05"
+              ref="volume"
+              :value="status.volume"
+            />
+            <Icon
+              name="shot"
+              hint="截图"
+              @click="handleShot"
+              :extraController="shotImg"
+            >
+              <template #default>
+                <img
+                  :src="shotImg"
+                  alt=""
+                  style="
+                    max-height: 100px;
+                    max-width: 100px;
+                    object-fit: contain;
+                  "
+                />
+              </template>
+            </Icon>
             <Icon
               name="cancelfullscreen"
               @click="handleFullScreen"
@@ -69,9 +97,13 @@
             />
             <Icon name="fullscreen" @click="handleFullScreen" v-else />
 
-            <Icon name="loop" />
-            <Icon name="noloop" />
-            <Icon name="shot" hint="截图" />
+            <Icon
+              name="noloop"
+              @click="handleLoop"
+              v-if="status.loop"
+              hint="关闭循环"
+            />
+            <Icon name="loop" @click="handleLoop" v-else hint="开启循环" />
           </div>
         </div>
       </div>
@@ -121,6 +153,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    loop: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -136,9 +172,12 @@ export default {
         durationText: '--:--:--',
         progress: 0,
         currentTimeWidth: '0%',
+        volume: 0,
+        loop: false,
       },
       timer: null,
       max: 1000,
+      shotImg: '',
     };
   },
   mounted() {
@@ -182,6 +221,17 @@ export default {
       video.style.width = '100%';
       this.video = video;
       this.handleEvents();
+
+      // set volume
+      if (this.$refs.volume) {
+        const initialVolume = this.muted ? 0 : 0.5;
+        this.$refs.volume.value = initialVolume;
+        this.setVolume(initialVolume);
+      }
+
+      // set loop
+      this.status.loop = this.loop;
+      this.video.loop = this.loop;
     },
     handlePlay() {
       if (this.status.playing) {
@@ -201,6 +251,9 @@ export default {
     handleMuted(muted) {
       this.video.muted = muted;
       this.status.muted = muted;
+      if (muted) {
+        this.status.volume = 0;
+      }
     },
     handleEvents() {
       this.video.addEventListener('play', () => {
@@ -237,8 +290,10 @@ export default {
         'timeupdate',
         throttle(() => {
           this.status.currentTime = this.video.currentTime;
-          this.$refs.current.value =
-            this.max * (this.video.currentTime / this.video.duration);
+          if (this.$refs.current) {
+            this.$refs.current.value =
+              this.max * (this.video.currentTime / this.video.duration);
+          }
           this.status.currentTimeText = parseTime(this.video.currentTime);
         }, 1000),
       );
@@ -313,6 +368,52 @@ export default {
       this.video.currentTime =
         this.video.duration * (srcElement.value / this.max);
     }, 200),
+
+    handleVolumeChange(e) {
+      const { srcElement } = e;
+      console.log(srcElement.value);
+      this.setVolume(srcElement.value);
+    },
+    setVolume(volume) {
+      this.status.volume = volume;
+      this.video.volume = volume;
+      if (volume === 0) {
+        this.video.muted = true;
+        this.status.muted = true;
+      } else {
+        this.video.muted = false;
+        this.status.muted = false;
+      }
+    },
+    handleLoop() {
+      const loop = !this.status.loop;
+      this.video.loop = loop;
+      this.status.loop = loop;
+    },
+    async handleShot() {
+      const video = this.video;
+      if (!video) return;
+      const canvas = document.createElement('canvas');
+      // 获取video标签的尺寸，作为画布的长宽
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+
+      if (!context) {
+        throw new Error('error creating canvas context');
+      }
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        });
+      });
+
+      this.shotImg = URL.createObjectURL(blob);
+
+      this.$emit('shot', { blob });
+    },
   },
 };
 </script>
@@ -326,7 +427,7 @@ export default {
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    height: 100px;
+    height: 200px;
     display: flex;
     align-items: stretch;
     flex-direction: column;
@@ -356,7 +457,6 @@ export default {
           border-radius: 2px;
           width: 100%;
           z-index: 2;
-          transition: all 0.4s ease;
         }
         .current-input {
           position: absolute;
@@ -422,7 +522,6 @@ export default {
           background: grey;
           width: 100%;
           z-index: 1;
-          transition: all 0.4s ease;
         }
       }
       .tool-bar {

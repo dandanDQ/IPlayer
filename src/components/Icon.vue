@@ -3,7 +3,11 @@
     <svg :width="size" :height="size">
       <use :xlink:href="`#${name}`"></use>
     </svg>
-    <div class="hint" v-if="hint">{{ hint }}</div>
+    <div class="hint basic" v-if="hint">
+      {{ hint }}
+    </div>
+    <!-- 一些额外展示的内容，展示时长暂定3s -->
+    <div class="extra basic" v-if="showExtra"><slot /></div>
   </div>
 </template>
 <script>
@@ -28,21 +32,28 @@ export default {
       type: String,
       default: '',
     },
+    extraController: {
+      type: String,
+      default: '',
+    },
   },
-  name: 'Icon',
+  watch: {
+    extraController: {
+      handler() {
+        // 发生变化时触发
+        this.showExtra = true;
+        setTimeout(() => {
+          this.showExtra = false;
+        }, 3000);
+      },
+    },
+  },
   data() {
     return {
-      showHint: false,
+      showExtra: false,
     };
   },
-  methods: {
-    handleMouseEnter() {
-      this.showHint = true;
-    },
-    handleMouseLeave() {
-      this.showHint = false;
-    },
-  },
+  name: 'Icon',
 };
 </script>
 <style lang="scss">
@@ -58,20 +69,19 @@ export default {
   // background: #5abae4;
   margin: 1px;
 
-  .hint {
+  .basic {
     position: absolute;
     background-color: rgb(239, 239, 239);
     color: #555;
     font-weight: 600;
     border-radius: 4px;
+    white-space: nowrap;
     z-index: 1;
     padding: 6px;
-    opacity: 0;
     transition: all 3s ease;
-    top: -40px;
+    top: -50px;
     font-size: 12px;
     border-radius: 3px;
-    width: 100%;
     text-align: center;
     &::before {
       content: '';
@@ -83,6 +93,14 @@ export default {
       top: 100%;
       left: calc(50% - 2px);
     }
+  }
+
+  .hint {
+    opacity: 0;
+  }
+
+  .extra {
+    top: -100px;
   }
 
   &:hover {
