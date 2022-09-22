@@ -1,8 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader')
 
-module.exports = {
+const defaultConfig = require('./webpack.base.js');
+const { merge } = require('webpack-merge');
+
+const output = merge(defaultConfig, {
   mode: 'development',
   context: path.resolve(__dirname, '../examples'),
   entry: {
@@ -10,30 +12,7 @@ module.exports = {
   },
   output: {
     filename: 'examples.js',
-    clean: true
-  },
-  module: {
-    rules: [
-        {
-          test: /\.svg$/,
-          loader: 'svg-sprite-loader',
-        },
-        {
-            test: /\.vue$/,
-            loader: 'vue-loader'
-        },
-        {
-            test: /\.js$/,
-            loader: 'babel-loader'
-        },
-        {
-            test: /\.css$/,
-            use: [
-                'vue-style-loader',
-                'css-loader',
-            ]
-        },
-    ]
+    clean: true,
   },
   devServer: {
     static: {
@@ -41,12 +20,16 @@ module.exports = {
     },
     compress: true,
     port: 9000,
+    open: true,
   },
-  plugins: [new VueLoaderPlugin(),
+  plugins: [
     new HtmlWebpackPlugin({
-        publicPath: 'auto',
-        title: 'IPlayer',
-        template: path.resolve(__dirname, '../public/index.html'),
+      publicPath: 'auto',
+      title: 'IPlayer',
+      template: path.resolve(__dirname, '../public/index.html'),
     }),
   ],
-};
+});
+
+console.log(output);
+module.exports = output;
