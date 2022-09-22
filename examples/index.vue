@@ -2,7 +2,7 @@
   <div>
     <IPlayer
       src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
-      :muted="false"
+      :muted="true"
       :step="20"
       :controlsList="['fastforward', 'shot', 'fullscreen', 'loop']"
     />
