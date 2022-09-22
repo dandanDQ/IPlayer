@@ -100,7 +100,7 @@ export default {
   }
 
   .extra {
-    top: -100px;
+    top: -80px;
   }
 
   &:hover {
