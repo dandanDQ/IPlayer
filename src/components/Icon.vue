@@ -12,7 +12,10 @@
 </template>
 <script>
 const importAll = (requireContext) =>
-  requireContext.keys().forEach(requireContext);
+  requireContext.keys().forEach((key) => {
+    console.log(key);
+    requireContext(key);
+  });
 try {
   importAll(require.context('../assets/icons', true, /\.svg$/));
 } catch (err) {

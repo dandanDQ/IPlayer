@@ -6,10 +6,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.svg$/,
-        loader: 'svg-sprite-loader',
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
       },

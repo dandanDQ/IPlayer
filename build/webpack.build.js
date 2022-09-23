@@ -8,6 +8,21 @@ const output = merge(defaultConfig, {
   entry: {
     iplayer: './index.js',
   },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'icons/[name].[ext]',
+            },
+          },
+        ],
+      },
+    ],
+  },
   externals: {
     'video.js': {
       root: 'videojs',

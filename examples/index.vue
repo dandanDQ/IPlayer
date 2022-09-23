@@ -9,7 +9,9 @@
   </div>
 </template>
 <script>
-import { IPlayer } from '../src/index.js';
+// import { IPlayer } from '../src/index.js';
+import { IPlayer } from '../dist/iplayer.js';
+
 export default {
   components: {
     IPlayer,

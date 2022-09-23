@@ -29,6 +29,17 @@ const output = merge(defaultConfig, {
       template: path.resolve(__dirname, '../public/index.html'),
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        // options: {
+        //   symbolId: '[name]',
+        // },
+      },
+    ],
+  },
 });
 
 console.log(output);
