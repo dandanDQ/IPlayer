@@ -61,6 +61,37 @@ new Vue({
 | controlsList | new attribute of version 2.0. The meaning of each configuration item is listed below: rewind: rewind, which gap is defined by attribute "step"; shot: to show shot button, when click it, 'shot' event will be emitted; fastforwrad: fastforward, the same with rewind; fullscreen: vodeo is played in full screen ; loop: to loop when video ends playing; | Array   | ['rewind', 'fastforward', 'shot', 'fullscreen', 'loop'] | ['rewind', 'fastforward', 'fullscreen']; |
 | step         | Configure the number of seconds to fast forward and rewind.                                                                                                                                                                                                                                                                                                 | Number  | —                                                       | 10                                       |
 
+### Events
+
+| Event Name | Description                           | Parameters |
+| ---------- | ------------------------------------- | ---------- |
+| shot       | fires when 'shot' button is clicked。 | {blob: ''} |
+
+Transparent transmission of all events listed in [MDN DOC](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLMediaElement/canplay_event) with the same name. Includes:
+
+- abort
+- canplay
+- canplaythrough
+- durationchange
+- emptied
+- ended
+- error
+- loadeddata
+- loadedmetadata
+- loadstart
+- pause
+- play
+- playing
+- progress
+- ratechange
+- seeked
+- seeking
+- stalled
+- suspend
+- timeupdate
+- volumechange
+- waiting
+
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
