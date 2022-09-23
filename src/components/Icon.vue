@@ -39,18 +39,22 @@ export default {
   },
   watch: {
     extraController: {
-      handler() {
-        // 发生变化时触发
-        this.showExtra = true;
-        setTimeout(() => {
-          this.showExtra = false;
-        }, 3000);
+      handler(newVal) {
+        if (newVal) {
+          // 发生变化时触发
+          this.showExtra = true;
+          if (this.timer) clearTimeout(this.timer);
+          this.timer = setTimeout(() => {
+            this.showExtra = false;
+          }, 3000);
+        }
       },
     },
   },
   data() {
     return {
       showExtra: false,
+      timer: null,
     };
   },
   name: 'Icon',

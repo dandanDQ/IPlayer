@@ -55,9 +55,40 @@ new Vue({
 | autoplay     | 是否自动播放                                                                                                                                                                | Boolean | —                                                       | true                                            |
 | controls     | 是否展示控制栏                                                                                                                                                              | Boolean | —                                                       | true                                            |
 | muted        | 是否静音                                                                                                                                                                    | Boolean | —                                                       | true                                            |
-| options      | 将配置透传至 video.js 初始化配置中，可在 1.0 版本中使用， 不推荐在 2.0 版本中使用。 options                                                                                 | Object  | —                                                       | true                                            |
+| options      | 将配置透传至 video.js 初始化配置中，options 内部属性，比与 options 同级的同名属性，优先级更高。可在 1.0 版本中使用， 不推荐在 2.0 版本中使用。 options                      | Object  | —                                                       | true                                            |
 | controlsList | 2.0 版本新增属性。配置对应关系如下：rewind：快退按钮，fastforward：快进按钮，shot：截图按钮，fullscreen：全屏按钮，loop：循环按钮。当配置中存在按钮名称时，将展示对应按钮。 | Array   | ['rewind', 'fastforward', 'shot', 'fullscreen', 'loop'] | ['rewind', 'fastforward', 'fullscreen', 'loop'] |
 | step         | 配置快进、快退的秒数。                                                                                                                                                      | Number  | —                                                       | 10                                              |
+
+### 事件
+
+| 事件名称 | 描述                                 | 参数       |
+| -------- | ------------------------------------ | ---------- |
+| shot     | 点击截图按钮时（完成 canvas 截图后） | {blob: ''} |
+
+透传 [MDN 文档](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLMediaElement/canplay_event)里提到的事件，包括：
+
+- abort
+- canplay
+- canplaythrough
+- durationchange
+- emptied
+- ended
+- error
+- loadeddata
+- loadedmetadata
+- loadstart
+- pause
+- play
+- playing
+- progress
+- ratechange
+- seeked
+- seeking
+- stalled
+- suspend
+- timeupdate
+- volumechange
+- waiting
 
 ## Plan
 

@@ -1,10 +1,11 @@
 <template>
-  <div ref="IPlayer" class="iplayer-container">
-    <video
-      ref="video-el"
-      @dblclick="handleDoubleClick"
-      @click="handleSingleClick"
-    ></video>
+  <div
+    ref="IPlayer"
+    class="iplayer-container"
+    @click="handleSingleClick"
+    @dblclick="handleDoubleClick"
+  >
+    <video ref="video-el"></video>
 
     <div
       v-if="controls"
@@ -15,7 +16,7 @@
       }"
     >
       <!-- when hover beyond the area, the control bar will show. -->
-      <div class="control-bar">
+      <div class="control-bar" @click.stop @dblclick.stop>
         <div class="progress-bar" ref="progress-bar">
           <!-- <div
             class="progress"
@@ -211,6 +212,7 @@ export default {
   },
   methods: {
     init() {
+      // 兼容只配置 options 的情况
       const videojsOptions = {
         autoplay: this.autoplay,
         controls: false,
@@ -380,9 +382,12 @@ export default {
       }
     },
     handleDoubleClick() {
-      clearTimeout(this.timer);
-      this.timer = null;
-      this.handleFullScreen();
+      // only if 'fullscreen' is open.
+      if (this.controlsList.includes('fullscreen')) {
+        clearTimeout(this.timer);
+        this.timer = null;
+        this.handleFullScreen();
+      }
     },
     handleProgressInput: throttle(function (e) {
       const { srcElement } = e;
@@ -430,6 +435,11 @@ export default {
           resolve(blob);
         });
       });
+
+      if (this.shotImg) {
+        // revoke first
+        URL.revokeObjectURL(this.shotImg);
+      }
 
       this.shotImg = URL.createObjectURL(blob);
 
