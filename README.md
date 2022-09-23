@@ -2,6 +2,8 @@
 
 🤩 IPlayer —— A hls video player base on video.js for vue2.
 
+👉🏻 [中文文档](https://github.com/dandanDQ/IPlayer/blob/main/README.zh.md)
+
 ## Install
 
 ```shell
@@ -47,16 +49,17 @@ new Vue({
 
 ### Attributes
 
-| Attribute    | Description                                                                          | Type    | Accepted Values | Default |
-| ------------ | ------------------------------------------------------------------------------------ | ------- | --------------- | ------- |
-| src          | the src of video, such as 'https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8' | String  | —               | —       |
-| height       | height of the video.                                                                 | String  | —               | 300     |
-| width        | width of the video.                                                                  | String  | —               | 500     |
-| autoplay     | autoplay when loaded                                                                 | Boolean | —               | true    |
-| controls     | show control bar                                                                     | Boolean | —               | true    |
-| muted        | muted when starting playing                                                          | Boolean | —               | true    |
-| options      | the same width video.js's options.                                                   | Object  | —               | true    |
-| controlsList | If the length of controlsList is not empty, it'll show the new ontrol bar.           | Array   | —               | []      |
+| Attribute    | Description                                                                                                                                                                                                                                                                                                                                                 | Type    | Accepted Values                                         | Default                                  |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------- | ---------------------------------------- |
+| src          | the src of video, such as 'https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8'                                                                                                                                                                                                                                                                        | String  | —                                                       | —                                        |
+| height       | height of the video.                                                                                                                                                                                                                                                                                                                                        | String  | —                                                       | 300                                      |
+| width        | width of the video.                                                                                                                                                                                                                                                                                                                                         | String  | —                                                       | 500                                      |
+| autoplay     | autoplay when loaded                                                                                                                                                                                                                                                                                                                                        | Boolean | —                                                       | true                                     |
+| controls     | show control bar                                                                                                                                                                                                                                                                                                                                            | Boolean | —                                                       | true                                     |
+| muted        | muted when starting playing                                                                                                                                                                                                                                                                                                                                 | Boolean | —                                                       | true                                     |
+| options      | Prossible attributes of options: sources, controls, autoplay, muted. Remember that options has higher priority than other properties, for example, if you config muted: true and {options: {muted: false}}, it'll work as muted is true.                                                                                                                    | Object  | —                                                       | true                                     |
+| controlsList | new attribute of version 2.0. The meaning of each configuration item is listed below: rewind: rewind, which gap is defined by attribute "step"; shot: to show shot button, when click it, 'shot' event will be emitted; fastforwrad: fastforward, the same with rewind; fullscreen: vodeo is played in full screen ; loop: to loop when video ends playing; | Array   | ['rewind', 'fastforward', 'shot', 'fullscreen', 'loop'] | ['rewind', 'fastforward', 'fullscreen']; |
+| step         | Configure the number of seconds to fast forward and rewind.                                                                                                                                                                                                                                                                                                 | Number  | —                                                       | 10                                       |
 
 ## License
 

@@ -212,6 +212,7 @@ export default {
   },
   methods: {
     init() {
+      // 兼容只配置 options 的情况
       const videojsOptions = {
         autoplay: this.autoplay,
         controls: false,
