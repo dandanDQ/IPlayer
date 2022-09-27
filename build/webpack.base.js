@@ -6,6 +6,14 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: path.resolve(__dirname, '../src/assets/icons'),
+        // options: {
+        //   symbolId: '[name]',
+        // },
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
