@@ -17,6 +17,7 @@ const output = merge(defaultConfig, {
     },
   },
   output: {
+    publicPath: '/',
     filename: '[name].js',
     library: 'IPlayer',
     libraryTarget: 'umd',

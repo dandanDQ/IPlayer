@@ -8,7 +8,7 @@
   "jspm": {
     "main": "dist/iplayer.js",
     "registry": "npm",
-    "format": "browser"
+    "format": "esm"
   },
   "scripts": {
     "dev": "webpack-dev-server --config build/webpack.demo.js",

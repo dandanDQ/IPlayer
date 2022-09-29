@@ -22,8 +22,8 @@ const exec = async (command) => {
 };
 
 const main = async () => {
-  for (let i = 6; i <= 88; i += 1) {
-    const version = `1.0.${i}`;
+  for (let i = 4; i <= 5; i += 1) {
+    const version = `2.0.${i}`;
     await exec(`npm unpublish vue-iplayer@${version} --force`);
     console.log(`npm unpublish vue-iplayer@${version} --force`);
     await sleep(3);
