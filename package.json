@@ -1,6 +1,6 @@
 {
   "name": "vue-iplayer",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Video player base on video.js for vue2.",
   "main": "dist/iplayer.js",
   "unpkg": "dist/iplayer.js",
@@ -25,6 +25,8 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.3",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",

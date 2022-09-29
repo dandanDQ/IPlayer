@@ -8,14 +8,14 @@ const output = merge(defaultConfig, {
   entry: {
     iplayer: './index.js',
   },
-  externals: {
-    'video.js': {
-      root: 'videojs',
-      commonjs: 'video.js',
-      commonjs2: 'video.js',
-      amd: 'videojs',
-    },
-  },
+  // externals: {
+  //   'video.js': {
+  //     root: 'videojs',
+  //     commonjs: 'video.js',
+  //     commonjs2: 'video.js',
+  //     amd: 'videojs',
+  //   },
+  // },
   output: {
     publicPath: '/',
     filename: '[name].js',
