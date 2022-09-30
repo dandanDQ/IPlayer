@@ -22,7 +22,7 @@ const exec = async (command) => {
 };
 
 const main = async () => {
-  for (let i = 4; i <= 5; i += 1) {
+  for (let i = 6; i <= 6; i += 1) {
     const version = `2.0.${i}`;
     await exec(`npm unpublish vue-iplayer@${version} --force`);
     console.log(`npm unpublish vue-iplayer@${version} --force`);

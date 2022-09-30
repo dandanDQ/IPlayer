@@ -37,38 +37,56 @@
         </div>
         <div class="tool-bar">
           <div class="left">
-            <Icon
-              name="rewind"
-              @click="handleTimeChange(-step)"
-              v-if="controlsList.includes('rewind')"
-            />
-            <Icon
-              name="pause"
-              size="18"
-              @click="handlePlay"
-              v-if="status.playing"
-              hint="暂停"
-            />
-            <Icon
-              name="play"
-              @click="handlePlay"
-              v-else
-              size="18"
-              hint="播放"
-            />
-            <Icon name="fastforward" @click="handleTimeChange(step)" />
+            <!-- rewind button -->
+            <popover v-if="controlsList.includes('rewind')">
+              <template #reference>
+                <Icon name="rewind" @click="handleTimeChange(-step)" />
+              </template>
+              <div>{{ TRANSLATE.rewind }}</div>
+            </popover>
+
+            <!-- play and pause button -->
+            <popover>
+              <template #reference>
+                <Icon
+                  name="pause"
+                  size="18"
+                  @click="handlePlay"
+                  v-if="status.playing"
+                />
+                <Icon name="play" @click="handlePlay" v-else size="18" />
+              </template>
+              <div>{{ status.playing ? TRANSLATE.pause : TRANSLATE.play }}</div>
+            </popover>
+
+            <!-- fastforward button -->
+            <popover>
+              <template #reference>
+                <Icon name="fastforward" @click="handleTimeChange(step)" />
+              </template>
+              <div>{{ TRANSLATE.fastforward }}</div>
+            </popover>
+
             <span class="info">
               {{ status.currentTimeText }} / {{ status.durationText }}
             </span>
           </div>
           <div class="right">
-            <Icon
-              name="mute"
-              hint="muted"
-              @click="handleMuted(false)"
-              v-if="status.muted"
-            />
-            <Icon name="sound" @click="handleMuted(true)" v-else />
+            <!-- muted and sound button -->
+            <popover>
+              <template #reference>
+                <Icon
+                  name="mute"
+                  hint="muted"
+                  @click="handleMuted(false)"
+                  v-if="status.muted"
+                />
+                <Icon name="sound" @click="handleMuted(true)" v-else />
+              </template>
+              <div>{{ status.muted ? TRANSLATE.sound : TRANSLATE.muted }}</div>
+            </popover>
+
+            <!-- volume control -->
             <input
               type="range"
               @change="handleVolumeChange"
@@ -78,42 +96,47 @@
               ref="volume"
               :value="status.volume"
             />
-            <Icon
-              v-if="controlsList.includes('shot')"
-              name="shot"
-              hint="截图"
-              @click="handleShot"
-              :extraController="shotImg"
-            >
-              <template #default>
-                <img
-                  :src="shotImg"
-                  alt=""
-                  style="
-                    max-height: 100px;
-                    max-width: 100px;
-                    object-fit: contain;
-                  "
-                />
+
+            <!-- shot button -->
+            <popover>
+              <template #reference>
+                <Icon
+                  v-if="controlsList.includes('shot')"
+                  name="shot"
+                  @click="handleShot"
+                ></Icon>
               </template>
-            </Icon>
-            <template v-if="controlsList.includes('fullscreen')">
-              <Icon
-                name="cancelfullscreen"
-                @click="handleFullScreen"
-                v-if="status.fullscreen"
-              />
-              <Icon name="fullscreen" @click="handleFullScreen" v-else />
-            </template>
-            <template v-if="controlsList.includes('loop')">
-              <Icon
-                name="noloop"
-                @click="handleLoop"
-                v-if="status.loop"
-                hint="关闭循环"
-              />
-              <Icon name="loop" @click="handleLoop" v-else hint="开启循环" />
-            </template>
+              <img v-if="shotImg" :src="shotImg" alt="" class="shot-img" />
+              <div v-else>{{ TRANSLATE.shot }}</div>
+            </popover>
+
+            <!-- fullscreen button -->
+            <popover v-if="controlsList.includes('fullscreen')">
+              <template #reference>
+                <Icon
+                  name="cancelfullscreen"
+                  @click="handleFullScreen"
+                  v-if="status.fullscreen"
+                />
+                <Icon name="fullscreen" @click="handleFullScreen" v-else />
+              </template>
+              <div>
+                {{
+                  status.fullscreen
+                    ? TRANSLATE.fullscreen
+                    : TRANSLATE.fullscreen
+                }}
+              </div>
+            </popover>
+
+            <!-- loop button -->
+            <popover v-if="controlsList.includes('loop')">
+              <template #reference>
+                <Icon name="noloop" @click="handleLoop" v-if="status.loop" />
+                <Icon name="loop" @click="handleLoop" v-else />
+              </template>
+              <div>{{ status.loop ? TRANSLATE.noloop : TRANSLATE.loop }}</div>
+            </popover>
           </div>
         </div>
       </div>
@@ -127,10 +150,13 @@ import 'video.js/dist/video-js.css';
 import Icon from './components/Icon.vue';
 import { parseTime } from './utils/index.js';
 import throttle from 'lodash/throttle';
+import Popover from './components/Popover.vue';
+
 export default {
   name: 'IPlayer',
   components: {
     Icon,
+    Popover,
   },
   props: {
     src: {
@@ -200,6 +226,19 @@ export default {
       shotImg: '',
 
       showControls: false,
+
+      TRANSLATE: {
+        play: '播放',
+        pause: '暂停',
+        muted: '静音',
+        sound: '打开声音',
+        rewind: '快退',
+        fastforward: '快进',
+        shot: '截图',
+        fullscreen: '全屏',
+        loop: '开启循环',
+        noloop: '关闭循环',
+      },
     };
   },
   mounted() {
@@ -470,6 +509,11 @@ export default {
           display: flex;
         }
       }
+    }
+    .shot-img {
+      max-width: 100px;
+      max-height: 100px;
+      object-fit: contain;
     }
 
     .control-bar {
