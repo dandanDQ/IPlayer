@@ -83,16 +83,25 @@
             />
 
             <!-- shot button -->
-            <popover>
+            <popover v-if="controlsList.includes('shot')">
               <template #reference>
-                <Icon
-                  v-if="controlsList.includes('shot')"
-                  name="shot"
-                  @click="handleShot"
-                ></Icon>
+                <Icon name="shot" @click="handleShot"></Icon>
               </template>
               <img v-if="shotImg" :src="shotImg" alt="" class="shot-img" />
               <div v-else>{{ TRANSLATE.shot }}</div>
+            </popover>
+
+            <!-- rate button -->
+            <popover v-if="controlsList.includes('rate')">
+              <template #reference>
+                <Icon name="rate"></Icon>
+              </template>
+              <div>
+                <input type="radio" />
+                <input type="radio" />
+
+                <input type="radio" />
+              </div>
             </popover>
 
             <!-- fullscreen button -->
@@ -120,7 +129,7 @@
                 <Icon name="noloop" @click="handleLoop" v-if="status.loop" />
                 <Icon name="loop" @click="handleLoop" v-else />
               </template>
-              <div>{{ status.loop ? TRANSLATE.noloop : TRANSLATE.loop }}</div>
+              <div>{{ status.loop ? TRANSLATE.loop : TRANSLATE.noloop }}</div>
             </popover>
           </div>
         </div>
@@ -436,7 +445,6 @@ export default {
 
     handleVolumeChange(e) {
       const { srcElement } = e;
-      console.log(srcElement.value);
       this.setVolume(srcElement.value);
     },
     setVolume(volume) {

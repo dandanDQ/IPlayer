@@ -1,12 +1,12 @@
 <template>
-  <div class="popover">
-    <slot name="reference">
-      <div>测试</div>
-    </slot>
-    <div class="popover-content">
-      <slot>
-        <div>测试pop出的</div>
-      </slot>
+  <div
+    class="popover"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
+    <slot name="reference" />
+    <div class="popper" v-show="show">
+      <slot />
     </div>
   </div>
 </template>
@@ -19,26 +19,43 @@ export default {
       default: '',
     },
   },
+  data() {
+    return {
+      show: true,
+    };
+  },
+  methods: {
+    handleMouseEnter() {
+      // this.show = true;
+    },
+    handleMouseLeave() {
+      // this.show = false;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .popover {
   position: relative;
-  .popover-content {
+  .popper {
     position: absolute;
-    background-color: rgb(239, 239, 239);
+    background-color: white;
     color: #555;
     font-weight: 600;
     border-radius: 4px;
     white-space: nowrap;
     z-index: 1;
     padding: 6px;
-    transition: all 3s ease;
     bottom: 150%;
+    left: 50%;
     font-size: 12px;
     border-radius: 3px;
     text-align: center;
-    opacity: 0;
+    // display: none;
+    visibility: hidden;
+    transform: translateX(-50%);
+    transition: all 3s ease;
+
     &::before {
       content: '';
       border-top: 4px solid white;
@@ -47,12 +64,16 @@ export default {
       border-bottom: 4px solid transparent;
       position: absolute;
       top: 100%;
-      left: calc(50% - 2px);
+      left: calc(50% - 4px);
+    }
+
+    &:hover {
+      visibility: visible;
     }
   }
   &:hover {
-    .popover-content {
-      opacity: 1;
+    .popper {
+      visibility: visible;
     }
   }
 }
