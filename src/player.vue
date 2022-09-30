@@ -7,25 +7,10 @@
   >
     <video ref="video-el"></video>
 
-    <div
-      v-if="controls"
-      class="control-area"
-      :style="{
-        '--progress': `${(status.progress / status.duration) * 100}%`,
-        '--current': `${(status.currentTime / status.duration) * 100}%`,
-      }"
-    >
+    <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
         <div class="progress-bar" ref="progress-bar">
-          <!-- <div
-            class="progress"
-            :style="`width: ${(status.progress / status.duration) * 100}%`"
-          ></div> -->
-          <!-- <div
-            class="current"
-            :style="`width: ${(status.currentTime / status.duration) * 100}%`"
-          ></div> -->
           <input
             ref="current"
             class="current-input"
@@ -317,6 +302,18 @@ export default {
         this.status.volume = 0;
       }
     },
+    updateStyleProgress() {
+      const el = this.refs['progress-bar'];
+      el.style['--progress'] = `${
+        (this.status.progress / this.status.duration) * 100
+      }%`;
+    },
+    updateStyleCurrent() {
+      const el = this.refs['progress-bar'];
+      el.style['--current'] = `${
+        (this.status.currentTime / this.status.duration) * 100
+      }%`;
+    },
     handleEvents() {
       this.video.addEventListener('play', () => {
         this.status.playing = true;
@@ -357,6 +354,8 @@ export default {
               this.max * (this.video.currentTime / this.video.duration);
           }
           this.status.currentTimeText = parseTime(this.video.currentTime);
+
+          this.updateStyleCurrent();
         }, 1000),
       );
 
@@ -365,6 +364,7 @@ export default {
           const len = this.video.buffered.length;
           if (len) {
             this.status.progress = this.video.buffered.end(len - 1);
+            this.updateStyleProgress();
           }
         } catch (e) {
           console.error(e);
