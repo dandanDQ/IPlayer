@@ -54,7 +54,7 @@ export default {
     // display: none;
     visibility: hidden;
     transform: translateX(-50%);
-    transition: all 3s ease;
+    transition: all 0.5s ease;
 
     &::before {
       content: '';

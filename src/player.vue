@@ -96,11 +96,16 @@
               <template #reference>
                 <Icon name="rate"></Icon>
               </template>
-              <div>
-                <input type="radio" />
-                <input type="radio" />
-
-                <input type="radio" />
+              <div class="radio-group">
+                <radio
+                  v-model="rate"
+                  name="倍速"
+                  @change="handleRateChange"
+                  v-for="r in playbackRates"
+                  :key="r"
+                  :label="`x ${r}`"
+                  :value="r"
+                />
               </div>
             </popover>
 
@@ -145,12 +150,14 @@ import Icon from './components/Icon.vue';
 import { parseTime } from './utils/index.js';
 import throttle from 'lodash/throttle';
 import Popover from './components/Popover.vue';
+import Radio from './components/Radio.vue';
 
 export default {
   name: 'IPlayer',
   components: {
     Icon,
     Popover,
+    Radio,
   },
   props: {
     src: {
@@ -197,6 +204,10 @@ export default {
       type: Number,
       default: 10,
     },
+    rates: {
+      type: Array,
+      default: [1, 1.5, 2, 2.5],
+    },
   },
   data() {
     return {
@@ -233,6 +244,8 @@ export default {
         loop: '开启循环',
         noloop: '关闭循环',
       },
+      playbackRates: [],
+      rate: '1.0',
     };
   },
   mounted() {
@@ -288,6 +301,11 @@ export default {
       // set loop
       this.status.loop = this.loop;
       this.video.loop = this.loop;
+
+      // initialize playback rates
+      for (const rate of this.rates) {
+        this.playbackRates.push(Number(rate).toFixed(1));
+      }
     },
     handlePlay() {
       if (this.status.playing) {
@@ -312,13 +330,13 @@ export default {
       }
     },
     updateStyleProgress() {
-      const el = this.refs['progress-bar'];
+      const el = this.$refs['progress-bar'];
       el.style['--progress'] = `${
         (this.status.progress / this.status.duration) * 100
       }%`;
     },
     updateStyleCurrent() {
-      const el = this.refs['progress-bar'];
+      const el = this.$refs['progress-bar'];
       el.style['--current'] = `${
         (this.status.currentTime / this.status.duration) * 100
       }%`;
@@ -492,6 +510,9 @@ export default {
 
       this.$emit('shot', { blob });
     },
+    handleRateChange(rate) {
+      this.video.playbackRate = Number(rate);
+    },
   },
 };
 </script>
@@ -522,6 +543,12 @@ export default {
       max-width: 100px;
       max-height: 100px;
       object-fit: contain;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .control-bar {
