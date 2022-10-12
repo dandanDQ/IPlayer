@@ -144,13 +144,12 @@
 </template>
 
 <script>
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
 import Icon from './components/Icon.vue';
 import { parseTime } from './utils/index.js';
 import throttle from 'lodash/throttle';
 import Popover from './components/Popover.vue';
 import Radio from './components/Radio.vue';
+import Hls from 'hls.js';
 
 export default {
   name: 'IPlayer',
@@ -206,12 +205,13 @@ export default {
     },
     rates: {
       type: Array,
-      default: [1, 1.5, 2, 2.5],
+      default() {
+        return [1, 1.5, 2, 2.5];
+      },
     },
   },
   data() {
     return {
-      player: null,
       video: null,
       status: {
         playing: true,
@@ -252,9 +252,7 @@ export default {
     this.init();
   },
   beforeDestroy() {
-    if (this.player) {
-      this.player.dispose();
-    }
+    // 销毁
   },
   methods: {
     init() {
@@ -277,18 +275,20 @@ export default {
 
       // 初始化播放状态
       this.status.playing = options.autoplay;
+      this.video = this.$refs['video-el'];
 
-      this.player = videojs(this.$refs['video-el'], options, () => {
-        this.player.log('onPlayerReady', this);
-      });
+      if (Hls.isSupported()) {
+        console.log('成功啦');
+        const hls = new Hls();
+        hls.loadSource(this.src);
+        hls.attachMedia(this.video);
+      }
       // 修改样式成自适应
-      const el = this.player.el_;
-      el.style.height = '100%';
-      el.style.width = '100%';
-      const video = this.player.el_?.childNodes?.[0];
-      video.style.height = '100%';
-      video.style.width = '100%';
-      this.video = video;
+      this.video.style.height = '100%';
+      this.video.style.width = '100%';
+      this.video.style.height = '100%';
+      this.video.style.width = '100%';
+
       this.handleEvents();
 
       // set volume
