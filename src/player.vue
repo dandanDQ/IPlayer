@@ -7,6 +7,10 @@
   >
     <video ref="video-el"></video>
 
+    <div class="seeking-icon" v-if="status.seeking">
+      <Icon name="loading" size="150" class="icon" />
+    </div>
+
     <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
@@ -225,6 +229,7 @@ export default {
         currentTimeWidth: '0%',
         volume: 0,
         loop: false,
+        seeking: false, // 加载中
       },
       timer: null,
       max: 1000,
@@ -257,24 +262,24 @@ export default {
   methods: {
     init() {
       // 兼容只配置 options 的情况
-      const videojsOptions = {
-        autoplay: this.autoplay,
-        controls: false,
-        // height: this.height,
-        // width: this.width,
-        muted: this.muted,
-        sources: [
-          {
-            src: this.src,
-          },
-        ],
-      };
+      // const videojsOptions = {
+      //   autoplay: this.autoplay,
+      //   controls: false,
+      //   // height: this.height,
+      //   // width: this.width,
+      //   muted: this.muted,
+      //   sources: [
+      //     {
+      //       src: this.src,
+      //     },
+      //   ],
+      // };
 
       // 做一个简单的合并，兼容之前的逻辑
-      const options = Object.assign({}, videojsOptions, this.options);
+      // const options = Object.assign({}, videojsOptions, this.options);
 
       // 初始化播放状态
-      this.status.playing = options.autoplay;
+      // this.status.playing = options.autoplay;
       this.video = this.$refs['video-el'];
 
       if (Hls.isSupported()) {
@@ -396,6 +401,14 @@ export default {
         } catch (e) {
           console.error(e);
         }
+      });
+
+      this.video.addEventListener('seeking', (e) => {
+        this.status.seeking = true;
+      });
+
+      this.video.addEventListener('seeked', (e) => {
+        this.status.seeking = false;
       });
 
       // 监听并透传所有事件
@@ -520,6 +533,31 @@ export default {
 .iplayer-container {
   position: relative;
   $current: 20%;
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .seeking-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    opacity: 0.5;
+    font-size: 800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon {
+      animation: rotate 1s infinite linear;
+    }
+  }
   .control-area {
     // border: 1px solid white;
     position: absolute;
