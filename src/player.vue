@@ -484,13 +484,13 @@ export default {
         this.handleFullScreen();
       }
     },
-    updateStyleCurrentByEvent: throttle(function (e) {
+    updateStyleCurrentByEvent(e) {
       const { clientX } = e;
       const rect = this.$refs['progress'].getBoundingClientRect();
       const { left, width } = rect;
       const ratio = (clientX - left) / width;
       this.updateStyleCurrent(ratio);
-    }, 200),
+    },
     handleCurrentProgress: throttle(function (e) {
       const { clientX } = e;
       const rect = this.$refs['progress'].getBoundingClientRect();
@@ -556,12 +556,12 @@ export default {
       this.pressing = true;
       console.log(e.type, e);
     },
-    onPointermove(e) {
+    onPointermove: throttle(function (e) {
       if (this.pressing) {
         console.log(e.type, e);
         this.updateStyleCurrentByEvent(e);
       }
-    },
+    }, 100),
     onPointerup(e) {
       if (this.pressing) {
         this.handleCurrentProgress(e);
