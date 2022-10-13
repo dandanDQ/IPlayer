@@ -4,9 +4,6 @@
     class="iplayer-container"
     @click="handleSingleClick"
     @dblclick="handleDoubleClick"
-    @pointerup="onPointerup"
-    @pointermove="onPointermove"
-    @pointerleave="onPointerup"
   >
     <video ref="video-el"></video>
 
@@ -22,12 +19,8 @@
     <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
-        <div class="progress-bar" ref="progress" @click="handleCurrentProgress">
-          <div class="buffered" ref="buffered"></div>
-          <div class="current" ref="current">
-            <Icon name="TV" @pointerdown.native="onPointerdown" />
-          </div>
-        </div>
+        <Slider @change="handleRatioChange" ref="progress-bar" />
+
         <div class="tool-bar">
           <div class="left">
             <!-- rewind button -->
@@ -157,6 +150,7 @@ import { parseTime } from './utils/index.js';
 import throttle from 'lodash/throttle';
 import Popover from './components/Popover.vue';
 import Radio from './components/Radio.vue';
+import Slider from './components/Slider.vue';
 import Hls from 'hls.js';
 
 export default {
@@ -164,6 +158,7 @@ export default {
   components: {
     Icon,
     Popover,
+    Slider,
     Radio,
   },
   props: {
@@ -349,18 +344,12 @@ export default {
       }
     },
     updateStyleProgress() {
-      const el = this.$refs['buffered'];
-      if (el) {
-        el.style.width = `${
-          (this.status.progress / this.status.duration) * 100
-        }%`;
-      }
+      const ratio = this.status.progress / this.status.duration;
+      this.$refs['progress-bar'].updateStyleProgress(ratio);
     },
-    updateStyleCurrent(ratio = this.status.currentTime / this.status.duration) {
-      const el = this.$refs['current'];
-      if (el) {
-        el.style.width = `${ratio * 100}%`;
-      }
+    updateStyleCurrent() {
+      const ratio = this.status.currentTime / this.status.duration;
+      this.$refs['progress-bar'].updateStyleCurrent(ratio);
     },
     handleEvents() {
       this.video.addEventListener('play', () => {
@@ -484,21 +473,9 @@ export default {
         this.handleFullScreen();
       }
     },
-    updateStyleCurrentByEvent(e) {
-      const { clientX } = e;
-      const rect = this.$refs['progress'].getBoundingClientRect();
-      const { left, width } = rect;
-      const ratio = (clientX - left) / width;
-      this.updateStyleCurrent(ratio);
-    },
-    handleCurrentProgress: throttle(function (e) {
-      const { clientX } = e;
-      const rect = this.$refs['progress'].getBoundingClientRect();
-      const { left, width } = rect;
-      const ratio = (clientX - left) / width;
-      this.updateStyleCurrent(ratio);
+    handleRatioChange(ratio) {
       this.video.currentTime = this.video.duration * ratio;
-    }, 300),
+    },
     handleVolumeChange(e) {
       const { srcElement } = e;
       this.setVolume(srcElement.value);
@@ -550,27 +527,6 @@ export default {
     },
     handleRateChange(rate) {
       this.video.playbackRate = Number(rate);
-    },
-    // 处理拖拽进度条操作
-    onPointerdown(e) {
-      this.pressing = true;
-      console.log(e.type, e);
-    },
-    onPointermove: throttle(function (e) {
-      if (this.pressing) {
-        console.log(e.type, e);
-        this.updateStyleCurrentByEvent(e);
-      }
-    }, 100),
-    onPointerup(e) {
-      if (this.pressing) {
-        this.handleCurrentProgress(e);
-      }
-      this.pressing = false;
-      console.log(e.type, e);
-    },
-    onPointerLeave() {
-      this.pressing = false;
     },
   },
 };
