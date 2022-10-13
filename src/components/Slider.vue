@@ -1,5 +1,10 @@
 <template>
-  <div class="progress-bar" ref="progress" @click="handleCurrentProgress">
+  <div
+    class="progress-bar"
+    ref="progress"
+    @click="handleCurrentProgress"
+    :style="`width: ${width}`"
+  >
     <div class="buffered" ref="buffered"></div>
     <div class="current" ref="current">
       <Icon name="TV" @pointerdown.native="onPointerdown" />
@@ -15,11 +20,15 @@ export default {
   components: {
     Icon,
   },
+  props: {
+    width: {
+      type: String,
+      default: '100%',
+    },
+  },
   // 发生的事件： change 也就是 ratio 改变
   data() {
-    return {
-      ratio: 0,
-    };
+    return {};
   },
   mounted() {
     document.body.addEventListener('pointermove', this.onPointermove);

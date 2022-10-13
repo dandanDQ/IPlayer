@@ -19,7 +19,7 @@
     <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
-        <Slider @change="handleRatioChange" ref="progress-bar" />
+        <Slider @change="handleRatioChange" ref="progress-bar"></Slider>
 
         <div class="tool-bar">
           <div class="left">
@@ -73,15 +73,7 @@
             </popover>
 
             <!-- volume control -->
-            <input
-              type="range"
-              @change="handleVolumeChange"
-              min="0"
-              max="1"
-              step="0.05"
-              ref="volume"
-              :value="status.volume"
-            />
+            <Slider width="100px" @change="handleVolumeChange" />
 
             <!-- shot button -->
             <popover v-if="controlsList.includes('shot')">
@@ -476,9 +468,9 @@ export default {
     handleRatioChange(ratio) {
       this.video.currentTime = this.video.duration * ratio;
     },
-    handleVolumeChange(e) {
-      const { srcElement } = e;
-      this.setVolume(srcElement.value);
+    handleVolumeChange(ratio) {
+      this.status.volume = ratio;
+      this.setVolume(ratio);
     },
     setVolume(volume) {
       this.status.volume = volume;
