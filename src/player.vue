@@ -26,6 +26,7 @@
             type="range"
             min="0"
             :max="max"
+            value="0"
             @input="handleProgressInput"
           />
         </div>
