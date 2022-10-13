@@ -19,16 +19,11 @@
     <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
-        <div class="progress-bar" ref="progress-bar">
-          <input
-            ref="current"
-            class="current-input"
-            type="range"
-            min="0"
-            :max="max"
-            value="0"
-            @input="handleProgressInput"
-          />
+        <div class="progress-bar" ref="progress" @click="handleCurrentProgress">
+          <div class="buffered" ref="buffered"></div>
+          <div class="current" ref="current">
+            <Icon name="TV" />
+          </div>
         </div>
         <div class="tool-bar">
           <div class="left">
@@ -239,7 +234,6 @@ export default {
         errorDetails: '', // 错误详情
       },
       timer: null,
-      max: 1000,
       shotImg: '',
 
       showControls: false,
@@ -350,16 +344,20 @@ export default {
       }
     },
     updateStyleProgress() {
-      const el = this.$refs['progress-bar'];
-      el.style['--progress'] = `${
-        (this.status.progress / this.status.duration) * 100
-      }%`;
+      const el = this.$refs['buffered'];
+      if (el) {
+        el.style.width = `${
+          (this.status.progress / this.status.duration) * 100
+        }%`;
+      }
     },
     updateStyleCurrent() {
-      const el = this.$refs['progress-bar'];
-      el.style['--current'] = `${
-        (this.status.currentTime / this.status.duration) * 100
-      }%`;
+      const el = this.$refs['current'];
+      if (el) {
+        el.style.width = `${
+          (this.status.currentTime / this.status.duration) * 100
+        }%`;
+      }
     },
     handleEvents() {
       this.video.addEventListener('play', () => {
@@ -483,12 +481,18 @@ export default {
         this.handleFullScreen();
       }
     },
-    handleProgressInput: throttle(function (e) {
-      const { srcElement } = e;
-      this.video.currentTime =
-        this.video.duration * (srcElement.value / this.max);
-    }, 200),
 
+    handleCurrentProgress: throttle(function (e) {
+      const { clientX } = e;
+      const rect = this.$refs['progress'].getBoundingClientRect();
+      const { left, width } = rect;
+      const el = this.$refs['current'];
+      if (el) {
+        const ratio = (clientX - left) / width;
+        el.style.width = `${ratio * 100}%`;
+        this.video.currentTime = this.video.duration * ratio;
+      }
+    }, 300),
     handleVolumeChange(e) {
       const { srcElement } = e;
       this.setVolume(srcElement.value);
@@ -582,7 +586,7 @@ export default {
   .control-area {
     // border: 1px solid white;
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
     width: 100%;
     box-sizing: border-box;
     height: 200px;
@@ -613,92 +617,42 @@ export default {
     .control-bar {
       .progress-bar {
         position: relative;
-        height: 6px;
-        background-color: rgb(45, 45, 45);
-
+        box-sizing: border-box;
+        height: 4px;
+        width: 100%;
         cursor: pointer;
+        background-color: #ffffff4d;
+        .current,
+        .buffered {
+          position: absolute;
+          height: 4px;
+          width: 100%;
+        }
+
         .current {
-          position: absolute;
-          top: 1px;
-          left: 0;
-          height: 4px;
-          background: #00b2ff;
-          border-radius: 2px;
-          width: 100%;
-          z-index: 2;
-        }
-        .current-input {
-          position: absolute;
-          top: 1px;
-          left: 0;
-          cursor: pointer;
-          // -webkit-appearance: none;
-          // appearance: none;
-          background: 0 0;
-          border: 0;
-          border-radius: 26px;
-          color: #00b2ff;
-          display: block;
-          height: 6px;
+          background: #00aeec;
+          width: 0%;
+          position: relative;
 
-          margin: 0;
-          min-width: 0;
-          padding: 0;
-          transition: box-shadow 0.3s ease;
-          width: 100%;
-          z-index: 5;
-
-          &::-webkit-slider-runnable-track {
-            background-color: hsla(0, 0%, 100%, 0.25);
-            background: 0 0;
-            background-image: linear-gradient(
-              to right,
-              #0066ff 0% var(--current, 0),
-              rgb(212, 212, 212) var(--current, 0) var(--progress, 0),
-              transparent var(--progress, 0)
-            );
-            border: 0;
-            border-radius: 2.5px;
-            height: 4px;
-
-            -webkit-transition: box-shadow 0.3s ease;
-            transition: box-shadow 0.3s ease;
-            -webkit-user-select: none;
-            user-select: none;
-          }
-
-          &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            background: #fff;
-            border-radius: 100%;
-
-            height: 12px;
-            margin-top: -5px;
-
-            position: relative;
-            -webkit-transition: all 0.2s ease;
-            transition: all 0.2s ease;
-            width: 12px;
+          .icon {
+            position: absolute;
+            right: -12px;
+            top: -14px;
           }
         }
 
-        .progress {
-          position: absolute;
-          top: 1px;
-          left: 0;
-          height: 4px;
+        .buffered {
           background: grey;
-          width: 100%;
-          z-index: 1;
+          width: 0%;
         }
       }
+
       .tool-bar {
         display: none;
         color: white;
         background: rgb(6, 32, 63);
         // display: flex;
-        padding: 6px;
+        padding: 4px;
         justify-content: space-between;
         align-items: center;
 
