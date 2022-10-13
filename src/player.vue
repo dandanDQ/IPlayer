@@ -7,8 +7,13 @@
   >
     <video ref="video-el"></video>
 
-    <div class="seeking-icon" v-if="status.seeking">
-      <Icon name="loading" size="150" class="icon" />
+    <div class="modal-box" v-if="status.seeking">
+      <Icon name="loading" size="150" class="rotate" />
+    </div>
+
+    <div class="modal-box" v-if="status.errorDetails">
+      <Icon name="error" size="150" />
+      <span class="hint">{{ status.errorDetails }}</span>
     </div>
 
     <div v-if="controls" class="control-area">
@@ -230,6 +235,7 @@ export default {
         volume: 0,
         loop: false,
         seeking: false, // 加载中
+        errorDetails: '', // 错误详情
       },
       timer: null,
       max: 1000,
@@ -283,8 +289,16 @@ export default {
       this.video = this.$refs['video-el'];
 
       if (Hls.isSupported()) {
-        console.log('成功啦');
         const hls = new Hls();
+
+        // 错误监听
+        hls.on(Hls.Events.ERROR, (e, data) => {
+          const { type, details, fatal } = data;
+          // fatal 的才展示出来
+          if (fatal && type === 'NETWORK_ERROR') {
+            this.status.errorDetails = `${type} ${details}`;
+          }
+        });
         hls.loadSource(this.src);
         hls.attachMedia(this.video);
       }
@@ -542,7 +556,7 @@ export default {
       transform: rotate(360deg);
     }
   }
-  .seeking-icon {
+  .modal-box {
     position: absolute;
     top: 0;
     left: 0;
@@ -554,8 +568,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    .icon {
-      animation: rotate 1s infinite linear;
+    flex-direction: column;
+
+    .hint {
+      font-size: 30px;
+      color: grey;
+    }
+    .rotate {
+      animation: rotate 2s infinite linear;
     }
   }
   .control-area {
