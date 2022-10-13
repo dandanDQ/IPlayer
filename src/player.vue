@@ -4,6 +4,9 @@
     class="iplayer-container"
     @click="handleSingleClick"
     @dblclick="handleDoubleClick"
+    @pointerup="onPointerup"
+    @pointermove="onPointermove"
+    @pointerleave="onPointerup"
   >
     <video ref="video-el"></video>
 
@@ -22,7 +25,7 @@
         <div class="progress-bar" ref="progress" @click="handleCurrentProgress">
           <div class="buffered" ref="buffered"></div>
           <div class="current" ref="current">
-            <Icon name="TV" />
+            <Icon name="TV" @pointerdown.native="onPointerdown" />
           </div>
         </div>
         <div class="tool-bar">
@@ -252,6 +255,8 @@ export default {
       },
       playbackRates: [],
       rate: '1.0',
+
+      pressing: false, // 是否拖动中
     };
   },
   mounted() {
@@ -351,12 +356,10 @@ export default {
         }%`;
       }
     },
-    updateStyleCurrent() {
+    updateStyleCurrent(ratio = this.status.currentTime / this.status.duration) {
       const el = this.$refs['current'];
       if (el) {
-        el.style.width = `${
-          (this.status.currentTime / this.status.duration) * 100
-        }%`;
+        el.style.width = `${ratio * 100}%`;
       }
     },
     handleEvents() {
@@ -481,17 +484,20 @@ export default {
         this.handleFullScreen();
       }
     },
-
+    updateStyleCurrentByEvent: throttle(function (e) {
+      const { clientX } = e;
+      const rect = this.$refs['progress'].getBoundingClientRect();
+      const { left, width } = rect;
+      const ratio = (clientX - left) / width;
+      this.updateStyleCurrent(ratio);
+    }, 200),
     handleCurrentProgress: throttle(function (e) {
       const { clientX } = e;
       const rect = this.$refs['progress'].getBoundingClientRect();
       const { left, width } = rect;
-      const el = this.$refs['current'];
-      if (el) {
-        const ratio = (clientX - left) / width;
-        el.style.width = `${ratio * 100}%`;
-        this.video.currentTime = this.video.duration * ratio;
-      }
+      const ratio = (clientX - left) / width;
+      this.updateStyleCurrent(ratio);
+      this.video.currentTime = this.video.duration * ratio;
     }, 300),
     handleVolumeChange(e) {
       const { srcElement } = e;
@@ -544,6 +550,27 @@ export default {
     },
     handleRateChange(rate) {
       this.video.playbackRate = Number(rate);
+    },
+    // 处理拖拽进度条操作
+    onPointerdown(e) {
+      this.pressing = true;
+      console.log(e.type, e);
+    },
+    onPointermove(e) {
+      if (this.pressing) {
+        console.log(e.type, e);
+        this.updateStyleCurrentByEvent(e);
+      }
+    },
+    onPointerup(e) {
+      if (this.pressing) {
+        this.handleCurrentProgress(e);
+      }
+      this.pressing = false;
+      console.log(e.type, e);
+    },
+    onPointerLeave() {
+      this.pressing = false;
     },
   },
 };
