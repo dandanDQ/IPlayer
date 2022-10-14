@@ -1,6 +1,6 @@
 {
   "name": "vue-iplayer",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Video player base on video.js for vue2.",
   "main": "dist/iplayer.js",
   "unpkg": "dist/iplayer.js",
