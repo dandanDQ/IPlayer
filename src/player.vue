@@ -303,11 +303,12 @@ export default {
       }
 
       // 处理用户配置
+      // 需要先处理静音，才能实现自动播放
+      this.handleMuted(this.muted);
+
       if (!this.controls) this.autoplay = true;
       this.status.playing = !this.autoplay;
       this.togglePlay();
-
-      this.handleMuted(this.muted);
     },
     togglePlay() {
       if (this.status.playing) {
