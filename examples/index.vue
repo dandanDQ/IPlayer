@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <IPlayer
       src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
       :muted="true"
@@ -19,3 +19,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.container {
+  width: 300px;
+}
+</style>

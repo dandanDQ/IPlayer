@@ -275,6 +275,8 @@ export default {
         });
         hls.loadSource(this.src);
         hls.attachMedia(this.video);
+      } else {
+        console.error('no hls');
       }
       // 修改样式成自适应
       this.video.style.height = '100%';
@@ -623,6 +625,7 @@ export default {
         padding: 4px;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: nowrap;
 
         .left,
         .right {
