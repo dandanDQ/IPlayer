@@ -19,7 +19,11 @@
     <div v-if="controls" class="control-area">
       <!-- when hover beyond the area, the control bar will show. -->
       <div class="control-bar" @click.stop @dblclick.stop>
-        <Slider @change="handleRatioChange" ref="progress-bar"></Slider>
+        <Slider
+          @change="handleRatioChange"
+          ref="progress-bar"
+          icon="TV"
+        ></Slider>
 
         <div class="tool-bar">
           <div class="left">

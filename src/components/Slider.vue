@@ -7,7 +7,7 @@
   >
     <div class="buffered" ref="buffered"></div>
     <div class="current" ref="current">
-      <Icon name="TV" @pointerdown.native="onPointerdown" />
+      <Icon :name="icon" @pointerdown.native="onPointerdown" />
     </div>
   </div>
 </template>
@@ -24,6 +24,10 @@ export default {
     width: {
       type: String,
       default: '100%',
+    },
+    icon: {
+      tyoe: String,
+      default: 'circle',
     },
   },
   // 发生的事件： change 也就是 ratio 改变
@@ -44,12 +48,15 @@ export default {
     // 提供更新值的接口
 
     updateStyleProgress(ratio) {
+      if (ratio < 0 || ratio > 1) return;
+
       const el = this.$refs['buffered'];
       if (el) {
         el.style.width = `${ratio * 100}%`;
       }
     },
     updateStyleCurrent(ratio) {
+      if (ratio < 0 || ratio > 1) return;
       const el = this.$refs['current'];
       if (el) {
         el.style.width = `${ratio * 100}%`;
@@ -60,6 +67,8 @@ export default {
       const rect = this.$refs['progress'].getBoundingClientRect();
       const { left, width } = rect;
       const ratio = (clientX - left) / width;
+      if (ratio < 0 || ratio > 1) return;
+
       this.updateStyleCurrent(ratio);
     },
     // 处理拖拽进度条操作
@@ -78,6 +87,9 @@ export default {
       const rect = this.$refs['progress'].getBoundingClientRect();
       const { left, width } = rect;
       const ratio = (clientX - left) / width;
+
+      if (ratio < 0 || ratio > 1) return;
+
       this.updateStyleCurrent(ratio);
       this.$emit('change', ratio);
     }, 300),
@@ -116,8 +128,8 @@ export default {
 
     .icon {
       position: absolute;
-      right: -12px;
-      top: -14px;
+      right: -14px;
+      top: -13px;
     }
   }
 
