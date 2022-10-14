@@ -41,10 +41,10 @@
                 <Icon
                   name="pause"
                   size="18"
-                  @click="handlePlay"
+                  @click="togglePlay"
                   v-if="status.playing"
                 />
-                <Icon name="play" @click="handlePlay" v-else size="18" />
+                <Icon name="play" @click="togglePlay" v-else size="18" />
               </template>
               <div>{{ status.playing ? TRANSLATE.pause : TRANSLATE.play }}</div>
             </popover>
@@ -260,25 +260,6 @@ export default {
   },
   methods: {
     init() {
-      // 兼容只配置 options 的情况
-      // const videojsOptions = {
-      //   autoplay: this.autoplay,
-      //   controls: false,
-      //   // height: this.height,
-      //   // width: this.width,
-      //   muted: this.muted,
-      //   sources: [
-      //     {
-      //       src: this.src,
-      //     },
-      //   ],
-      // };
-
-      // 做一个简单的合并，兼容之前的逻辑
-      // const options = Object.assign({}, videojsOptions, this.options);
-
-      // 初始化播放状态
-      // this.status.playing = options.autoplay;
       this.video = this.$refs['video-el'];
 
       if (Hls.isSupported()) {
@@ -318,8 +299,15 @@ export default {
       for (const rate of this.rates) {
         this.playbackRates.push(Number(rate).toFixed(1));
       }
+
+      // 处理用户配置
+      if (!this.controls) this.autoplay = true;
+      this.status.playing = !this.autoplay;
+      this.togglePlay();
+
+      this.handleMuted(this.muted);
     },
-    handlePlay() {
+    togglePlay() {
       if (this.status.playing) {
         this.video.pause();
       } else {
@@ -327,19 +315,12 @@ export default {
       }
       this.status.playing = !this.status.playing;
     },
-    handlePause() {
-      this.video.pause();
-      this.status.playing = false;
-    },
     handleTimeChange(seconds) {
       this.video.currentTime += seconds;
     },
     handleMuted(muted) {
       this.video.muted = muted;
       this.status.muted = muted;
-      if (muted) {
-        this.status.volume = 0;
-      }
     },
     updateStyleProgress() {
       const ratio = this.status.progress / this.status.duration;
@@ -455,15 +436,18 @@ export default {
       this.status.fullscreen = !this.status.fullscreen;
     },
     handleSingleClick() {
+      if (!this.controls) return;
       if (!this.timer) {
         this.timer = setTimeout(() => {
-          this.handlePlay();
+          this.togglePlay();
           clearTimeout(this.timer);
           this.timer = null;
         }, 300);
       }
     },
     handleDoubleClick() {
+      if (!this.controls) return;
+
       // only if 'fullscreen' is open.
       if (this.controlsList.includes('fullscreen')) {
         clearTimeout(this.timer);

@@ -74,11 +74,9 @@ export default {
     // 处理拖拽进度条操作
     onPointerdown(e) {
       this.pressing = true;
-      console.log(e.type, e);
     },
     onPointermove: throttle(function (e) {
       if (this.pressing) {
-        console.log(e.type, e);
         this.updateStyleCurrentByEvent(e);
       }
     }, 100),
@@ -98,7 +96,6 @@ export default {
         this.handleCurrentProgress(e);
       }
       this.pressing = false;
-      console.log(e.type, e);
     },
     onPointerLeave() {
       this.pressing = false;

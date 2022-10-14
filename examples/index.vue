@@ -4,6 +4,7 @@
       src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
       :muted="true"
       :step="20"
+      :controls="true"
       :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
     />
   </div>

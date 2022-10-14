@@ -8,13 +8,12 @@
 <script>
 const importAll = (requireContext) =>
   requireContext.keys().forEach((key) => {
-    console.log(key);
     requireContext(key);
   });
 try {
   importAll(require.context('../assets/icons', true, /\.svg$/));
 } catch (err) {
-  consoel.log(err);
+  console.log(err);
 }
 export default {
   props: {
