@@ -7,7 +7,7 @@
   >
     <div class="buffered" ref="buffered"></div>
     <div class="current" ref="current">
-      <Icon :name="icon" @pointerdown.native="onPointerdown" />
+      <Icon :name="icon" @pointerdown.native="onPointerdown" size="14" />
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
       default: '100%',
     },
     icon: {
-      tyoe: String,
+      type: String,
       default: 'circle',
     },
   },
@@ -129,7 +129,7 @@ export default {
     .icon {
       position: absolute;
       right: -14px;
-      top: -13px;
+      top: -11px;
     }
   }
 

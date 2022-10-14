@@ -77,7 +77,9 @@
             </popover>
 
             <!-- volume control -->
-            <Slider width="100px" @change="handleVolumeChange" />
+            <div class="volume-control">
+              <Slider width="100px" @change="handleVolumeChange" />
+            </div>
 
             <!-- shot button -->
             <popover v-if="controlsList.includes('shot')">
@@ -594,6 +596,9 @@ export default {
     }
 
     .control-bar {
+      .volume-control {
+        margin: 0 10px;
+      }
       .progress-bar {
         position: relative;
         box-sizing: border-box;
