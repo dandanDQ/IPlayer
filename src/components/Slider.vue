@@ -7,7 +7,8 @@
   >
     <div class="buffered" ref="buffered"></div>
     <div class="current" ref="current">
-      <Icon :name="icon" @pointerdown.native="onPointerdown" size="14" />
+      <div class="icon" @pointerdown="onPointerdown"></div>
+      <!-- <Icon :name="icon" @pointerdown.native="onPointerdown" size="14" /> -->
     </div>
   </div>
 </template>
@@ -103,7 +104,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style scoped lang="scss" scoped>
 .progress-bar {
   position: relative;
   box-sizing: border-box;
@@ -111,6 +112,7 @@ export default {
   width: 100%;
   cursor: pointer;
   background-color: #ffffff4d;
+
   .current,
   .buffered {
     position: absolute;
@@ -124,15 +126,19 @@ export default {
     position: relative;
 
     .icon {
+      width: 8px;
+      height: 4px;
+      background-color: #fefefe;
       position: absolute;
-      right: -14px;
-      top: -11px;
+      box-shadow: 0 0 3px grey;
+      right: 0px;
+      top: 0px;
     }
   }
 
   .buffered {
     background: grey;
-    width: 0%;
+    width: 100%;
   }
 }
 </style>

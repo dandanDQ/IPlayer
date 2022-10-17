@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="popover"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-  >
+  <div class="popover">
     <slot name="reference" />
-    <div class="popper" v-show="show">
+    <div class="popper">
       <slot />
     </div>
   </div>
@@ -19,19 +15,6 @@ export default {
       default: '',
     },
   },
-  data() {
-    return {
-      show: true,
-    };
-  },
-  methods: {
-    handleMouseEnter() {
-      // this.show = true;
-    },
-    handleMouseLeave() {
-      // this.show = false;
-    },
-  },
 };
 </script>
 <style lang="scss" scoped>
@@ -42,7 +25,6 @@ export default {
     background-color: white;
     color: #555;
     font-weight: 600;
-    border-radius: 4px;
     white-space: nowrap;
     z-index: 1;
     padding: 6px;

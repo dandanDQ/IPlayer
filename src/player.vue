@@ -57,7 +57,7 @@
               <div>{{ TRANSLATE.fastforward }}</div>
             </popover>
 
-            <span class="info">
+            <span class="info" :class="[style]">
               {{ status.currentTimeText }} / {{ status.durationText }}
             </span>
           </div>
@@ -73,13 +73,12 @@
                 />
                 <Icon name="sound" @click="handleMuted(true)" v-else />
               </template>
-              <div>{{ status.muted ? TRANSLATE.sound : TRANSLATE.muted }}</div>
+              <!-- <div>{{ status.muted ? TRANSLATE.sound : TRANSLATE.muted }}</div> -->
+              <!-- volume control -->
+              <div class="volume-control">
+                <Slider width="100px" @change="handleVolumeChange" />
+              </div>
             </popover>
-
-            <!-- volume control -->
-            <div class="volume-control">
-              <Slider width="100px" @change="handleVolumeChange" />
-            </div>
 
             <!-- shot button -->
             <popover v-if="controlsList.includes('shot')">
@@ -150,6 +149,13 @@ import Popover from './components/Popover.vue';
 import Radio from './components/Radio.vue';
 import Slider from './components/Slider.vue';
 import Hls from 'hls.js';
+
+const STYLE = {
+  normal: 'normal',
+  plain: 'plain',
+};
+
+Object.freeze(STYLE);
 
 export default {
   name: 'IPlayer',
@@ -250,6 +256,7 @@ export default {
       rate: '1.0',
 
       pressing: false, // 是否拖动中
+      style: false,
     };
   },
   mounted() {
@@ -283,6 +290,15 @@ export default {
       this.video.style.width = '100%';
       this.video.style.height = '100%';
       this.video.style.width = '100%';
+
+      // 识别视频宽度
+      const { width } = this.video.getBoundingClientRect();
+      console.log(width);
+
+      this.style = STYLE.normal;
+      if (width < 500) {
+        this.style = STYLE.plain;
+      }
 
       this.handleEvents();
 
@@ -520,6 +536,7 @@ export default {
 .iplayer-container {
   position: relative;
   $current: 20%;
+  min-width: 500px;
 
   @keyframes rotate {
     0% {
@@ -640,6 +657,7 @@ export default {
           color: rgb(198, 198, 198);
           user-select: none;
           margin: 0 6px;
+          white-space: nowrap;
         }
       }
     }

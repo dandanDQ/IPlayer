@@ -30,7 +30,7 @@ export default {
   name: 'Icon',
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .icon {
   position: relative;
   cursor: pointer;
