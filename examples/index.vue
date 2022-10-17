@@ -21,6 +21,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  width: 300px;
+  // width: 300px;
 }
 </style>

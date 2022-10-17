@@ -57,8 +57,14 @@
               <div>{{ TRANSLATE.fastforward }}</div>
             </popover>
 
-            <span class="info" :class="[style]">
-              {{ status.currentTimeText }} / {{ status.durationText }}
+            <span class="info">
+              <span v-if="style === 'normal'">
+                {{ status.currentTimeText }} / {{ status.durationText }}
+              </span>
+
+              <span v-if="style === 'plain'">
+                {{ status.currentTimeText }}
+              </span>
             </span>
           </div>
           <div class="right">
@@ -256,7 +262,7 @@ export default {
       rate: '1.0',
 
       pressing: false, // 是否拖动中
-      style: false,
+      style: STYLE.normal,
     };
   },
   mounted() {
@@ -264,6 +270,7 @@ export default {
   },
   beforeDestroy() {
     // 销毁
+    window.removeEventListener('resize', this.calStyle);
   },
   methods: {
     init() {
@@ -291,14 +298,7 @@ export default {
       this.video.style.height = '100%';
       this.video.style.width = '100%';
 
-      // 识别视频宽度
-      const { width } = this.video.getBoundingClientRect();
-      console.log(width);
-
-      this.style = STYLE.normal;
-      if (width < 500) {
-        this.style = STYLE.plain;
-      }
+      this.calStyle();
 
       this.handleEvents();
 
@@ -445,6 +445,8 @@ export default {
           this.$emit(event, e);
         });
       }
+
+      window.addEventListener('resize', this.calStyle);
     },
     handleFullScreen() {
       if (this.status.fullscreen) {
@@ -529,6 +531,17 @@ export default {
     handleRateChange(rate) {
       this.video.playbackRate = Number(rate);
     },
+    calStyle: throttle(function () {
+      // 根据当前视频宽度计算样式
+      // 识别视频宽度
+      const { width } = this.video.getBoundingClientRect();
+
+      if (width < 600) {
+        this.style = STYLE.plain;
+      } else {
+        this.style = STYLE.normal;
+      }
+    }, 400),
   },
 };
 </script>
@@ -536,7 +549,7 @@ export default {
 .iplayer-container {
   position: relative;
   $current: 20%;
-  min-width: 500px;
+  //  min-width: 500px;
 
   @keyframes rotate {
     0% {
@@ -658,6 +671,10 @@ export default {
           user-select: none;
           margin: 0 6px;
           white-space: nowrap;
+
+          &.plain {
+            display: none;
+          }
         }
       }
     }
