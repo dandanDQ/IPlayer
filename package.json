@@ -45,6 +45,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "flv.js": "^1.6.2",
     "hls.js": "^1.2.4",
     "lodash": "^4.17.21"
   },

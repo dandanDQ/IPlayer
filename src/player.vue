@@ -149,6 +149,7 @@ import Popover from './components/Popover.vue';
 import Radio from './components/Radio.vue';
 import Slider from './components/Slider.vue';
 import Hls from 'hls.js';
+import Flv from 'flv.js';
 
 export default {
   name: 'IPlayer',
@@ -209,6 +210,11 @@ export default {
         return [1, 1.5, 2, 2.5];
       },
     },
+    // 视频类型，支持 Hls，Flv，MP4
+    type: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -258,25 +264,62 @@ export default {
     // 销毁
   },
   methods: {
-    init() {
+    initMSE() {
       this.video = this.$refs['video-el'];
 
-      if (Hls.isSupported()) {
-        const hls = new Hls();
+      // 识别类型并进行初始化，支持 hls flv 和 mp4
+      let type = this.type;
 
-        // 错误监听
-        hls.on(Hls.Events.ERROR, (e, data) => {
-          const { type, details, fatal } = data;
-          // fatal 的才展示出来
-          if (fatal && type === 'NETWORK_ERROR') {
-            this.status.errorDetails = `${type} ${details}`;
-          }
-        });
-        hls.loadSource(this.src);
-        hls.attachMedia(this.video);
-      } else {
-        console.error('no hls');
+      if (!type) {
+        // 用户没有填写类型，则自动识别
+        if (/m3u8(#|\?|$)/i.exec(this.src)) {
+          type = 'hls';
+        } else if (/.flv(#|\?|$)/i.exec(this.src)) {
+          type = 'flv';
+        } else {
+          type = 'mp4';
+        }
       }
+
+      switch (type) {
+        case 'hls': {
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+
+            // 错误监听
+            hls.on(Hls.Events.ERROR, (e, data) => {
+              const { type, details, fatal } = data;
+              // fatal 的才展示出来
+              if (fatal && type === 'NETWORK_ERROR') {
+                this.status.errorDetails = `${type} ${details}`;
+              }
+            });
+            hls.loadSource(this.src);
+            hls.attachMedia(this.video);
+          } else {
+            console.error('no hls');
+          }
+
+          break;
+        }
+        case 'flv': {
+          if (Flv.isSupported()) {
+            const flvPlayer = Flv.createPlayer({
+              type: 'flv',
+              url: this.src,
+            });
+            flvPlayer.attachMediaElement(this.video);
+            flvPlayer.load();
+          }
+          break;
+        }
+        default:
+          this.video.src = this.src;
+          break;
+      }
+    },
+    init() {
+      this.initMSE();
 
       this.handleEvents();
 
