@@ -255,6 +255,7 @@ export default {
       rate: '1.0',
 
       pressing: false, // 是否拖动中
+      player: null,
     };
   },
   mounted() {
@@ -262,6 +263,7 @@ export default {
   },
   beforeDestroy() {
     // 销毁
+    this.player?.destroy?.();
   },
   methods: {
     initMSE() {
@@ -310,6 +312,7 @@ export default {
             });
             flvPlayer.attachMediaElement(this.video);
             flvPlayer.load();
+            this.player = flvPlayer;
           }
           break;
         }
