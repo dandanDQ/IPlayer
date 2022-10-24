@@ -59,6 +59,8 @@ new Vue({
 | controlsList | 2.0 版本新增属性。配置对应关系如下：rewind：快退按钮，fastforward：快进按钮，shot：截图按钮，fullscreen：全屏按钮，loop：循环按钮。当配置中存在按钮名称时，将展示对应按钮。 | Array   | ['rewind', 'fastforward', 'shot', 'fullscreen', 'loop'] | ['rewind', 'fastforward', 'fullscreen', 'loop', 'rate'] |
 | step         | 配置快进、快退的秒数。                                                                                                                                                      | Number  | —                                                       | 10                                                      |
 | rates        | 配置视频的倍速选项                                                                                                                                                          | Array   | —                                                       | [1,1.5,2,2.5]                                           |
+| volume       | 初始音量值。取值范围为 [0,1] 之间的的任意小数。                                                                                                                             | Number  | —                                                       | 0.5                                                     |
+| type         | 视频连接的类型，目前支持 hls, flv 和 mp4 格式。如果 type 是空的，程序将根据 src 自动计算类型（m3u8 -> hls, flv -> flv, 其他 -> mp4 ）。                                     | String  | hls/flv/mp4                                             | ''                                                      |
 
 ### 事件
 

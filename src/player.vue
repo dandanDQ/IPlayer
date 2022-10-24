@@ -76,7 +76,11 @@
               <!-- <div>{{ status.muted ? TRANSLATE.sound : TRANSLATE.muted }}</div> -->
               <!-- volume control -->
               <div class="volume-control">
-                <Slider width="100px" @change="handleVolumeChange" />
+                <Slider
+                  width="100px"
+                  @change="handleVolumeChange"
+                  :value="volume"
+                />
               </div>
             </popover>
 
@@ -215,6 +219,10 @@ export default {
       type: String,
       default: '',
     },
+    volume: {
+      type: Number,
+      default: 0.5,
+    },
   },
   data() {
     return {
@@ -328,7 +336,7 @@ export default {
 
       // set volume
       if (this.$refs.volume) {
-        const initialVolume = this.muted ? 0 : 0.5;
+        const initialVolume = this.muted ? 0 : this.volume;
         this.$refs.volume.value = initialVolume;
         this.setVolume(initialVolume);
       }

@@ -30,6 +30,10 @@ export default {
       type: String,
       default: 'circle',
     },
+    value: {
+      type: Number,
+      default: 0,
+    },
   },
   // 发生的事件： change 也就是 ratio 改变
   data() {
@@ -39,6 +43,8 @@ export default {
     document.body.addEventListener('pointermove', this.onPointermove);
     document.body.addEventListener('pointerup', this.onPointerup);
     document.body.addEventListener('pointerleave', this.onPointerup);
+
+    this.updateStyleCurrent(this.value);
   },
   beforeDestroy() {
     document.body.removeEventListener('pointermove', this.onPointermove);

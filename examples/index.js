@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import App from './index.local.vue';
+import App from './index.vue';
 // import IPlayer from '../src/index.js'
 
 Vue.config.productionTip = false;

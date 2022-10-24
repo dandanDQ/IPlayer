@@ -1,6 +1,6 @@
 # IPlayer
 
-🤩 IPlayer —— A hls video player base on video.js for vue2.
+🤩 IPlayer —— A modern video player for vue2, which supports hls, flv and mp4.
 
 👉🏻 [中文文档](https://github.com/dandanDQ/IPlayer/blob/main/README.zh.md)
 
@@ -61,6 +61,8 @@ new Vue({
 | controlsList | new attribute of version 2.0. The meaning of each configuration item is listed below: rewind: rewind, which gap is defined by attribute "step"; shot: to show shot button, when click it, 'shot' event will be emitted; fastforwrad: fastforward, the same with rewind; fullscreen: vodeo is played in full screen ; loop: to loop when video ends playing; | Array   | ['rewind', 'fastforward', 'shot', 'fullscreen', 'loop'] | ['rewind', 'fastforward', 'fullscreen', 'rate']; |
 | step         | Configure the number of seconds to fast forward and rewind.                                                                                                                                                                                                                                                                                                 | Number  | —                                                       | 10                                               |
 | rates        | config the playback rates.                                                                                                                                                                                                                                                                                                                                  | Array   | —                                                       | [1,1.5,2,2.5]                                    |
+| volume       | initial volume of this video, which value is in range of [0,1]                                                                                                                                                                                                                                                                                              | Number  | —                                                       | 0.5                                              |
+| type         | MSE type of the video, if type is empty, it will calculate the type by src.                                                                                                                                                                                                                                                                                 | String  | hls/flv/mp4                                             | ''                                               |
 
 ### Events
 
