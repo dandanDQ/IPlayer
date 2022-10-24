@@ -11,7 +11,7 @@ const output = merge(defaultConfig, {
     home: './index.js',
   },
   output: {
-    publicPath: '/docs',
+    publicPath: '/IPlayer',
     path: path.resolve(__dirname, '../docs'),
     filename: 'index.js',
     clean: true,
