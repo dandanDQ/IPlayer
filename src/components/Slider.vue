@@ -86,7 +86,7 @@ export default {
       if (this.pressing) {
         this.updateStyleCurrentByEvent(e);
       }
-    }, 100),
+    }, 50),
     handleCurrentProgress: throttle(function (e) {
       const { clientX } = e;
       const rect = this.$refs['progress'].getBoundingClientRect();
@@ -97,7 +97,7 @@ export default {
 
       this.updateStyleCurrent(ratio);
       this.$emit('change', ratio);
-    }, 300),
+    }, 50),
     onPointerup(e) {
       if (this.pressing) {
         this.handleCurrentProgress(e);

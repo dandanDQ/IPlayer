@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "webpack-dev-server --config build/webpack.demo.js",
     "build": "webpack --config build/webpack.build.js",
+    "demo": "webpack --config build/webpack.demo.js",
     "release": "node ./build/release.js",
     "prettier": "prettier --write ."
   },

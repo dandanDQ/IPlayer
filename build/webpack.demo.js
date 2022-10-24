@@ -11,7 +11,9 @@ const output = merge(defaultConfig, {
     home: './index.js',
   },
   output: {
-    filename: 'examples.js',
+    publicPath: '/demo',
+    path: path.resolve(__dirname, '../demo'),
+    filename: '[name].js',
     clean: true,
   },
   devServer: {
