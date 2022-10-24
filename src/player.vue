@@ -8,7 +8,7 @@
     <video ref="video-el"></video>
 
     <div class="modal-box" v-if="status.seeking">
-      <Icon name="loading" size="150" class="rotate" />
+      <Icon name="loading" size="100" class="rotate" />
     </div>
 
     <div class="modal-box" v-if="status.errorDetails">
@@ -57,14 +57,8 @@
               <div>{{ TRANSLATE.fastforward }}</div>
             </popover>
 
-            <span class="info">
-              <span v-if="style === 'normal'">
-                {{ status.currentTimeText }} / {{ status.durationText }}
-              </span>
-
-              <span v-if="style === 'plain'">
-                {{ status.currentTimeText }}
-              </span>
+            <span class="info" ref="progress-info">
+              {{ status.currentTimeText }} / {{ status.durationText }}
             </span>
           </div>
           <div class="right">
@@ -156,13 +150,6 @@ import Radio from './components/Radio.vue';
 import Slider from './components/Slider.vue';
 import Hls from 'hls.js';
 
-const STYLE = {
-  normal: 'normal',
-  plain: 'plain',
-};
-
-Object.freeze(STYLE);
-
 export default {
   name: 'IPlayer',
   components: {
@@ -238,7 +225,7 @@ export default {
         currentTimeWidth: '0%',
         volume: 0,
         loop: false,
-        seeking: false, // 加载中
+        seeking: true, // 加载中
         errorDetails: '', // 错误详情
       },
       timer: null,
@@ -262,7 +249,6 @@ export default {
       rate: '1.0',
 
       pressing: false, // 是否拖动中
-      style: STYLE.normal,
     };
   },
   mounted() {
@@ -270,7 +256,6 @@ export default {
   },
   beforeDestroy() {
     // 销毁
-    window.removeEventListener('resize', this.calStyle);
   },
   methods: {
     init() {
@@ -292,13 +277,6 @@ export default {
       } else {
         console.error('no hls');
       }
-      // 修改样式成自适应
-      this.video.style.height = '100%';
-      this.video.style.width = '100%';
-      this.video.style.height = '100%';
-      this.video.style.width = '100%';
-
-      this.calStyle();
 
       this.handleEvents();
 
@@ -383,6 +361,7 @@ export default {
       this.video.addEventListener(
         'timeupdate',
         throttle(() => {
+          this.status.seeking = false;
           this.status.currentTime = this.video.currentTime;
           if (this.$refs.current) {
             this.$refs.current.value =
@@ -445,8 +424,6 @@ export default {
           this.$emit(event, e);
         });
       }
-
-      window.addEventListener('resize', this.calStyle);
     },
     handleFullScreen() {
       if (this.status.fullscreen) {
@@ -531,25 +508,23 @@ export default {
     handleRateChange(rate) {
       this.video.playbackRate = Number(rate);
     },
-    calStyle: throttle(function () {
-      // 根据当前视频宽度计算样式
-      // 识别视频宽度
-      const { width } = this.video.getBoundingClientRect();
-
-      if (width < 600) {
-        this.style = STYLE.plain;
-      } else {
-        this.style = STYLE.normal;
-      }
-    }, 400),
   },
 };
 </script>
 <style lang="scss" scoped>
 .iplayer-container {
+  width: 100%;
+  height: 100%;
   position: relative;
+  background-color: black;
   $current: 20%;
   //  min-width: 500px;
+
+  video {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
 
   @keyframes rotate {
     0% {
@@ -584,7 +559,7 @@ export default {
   .control-area {
     // border: 1px solid white;
     position: absolute;
-    bottom: 4px;
+    bottom: 0px;
     width: 100%;
     box-sizing: border-box;
     height: 200px;
