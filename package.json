@@ -11,9 +11,9 @@
     "format": "esm"
   },
   "scripts": {
-    "dev": "webpack-dev-server --config build/webpack.demo.js",
+    "dev": "webpack-dev-server --config build/webpack.dev.js",
     "build": "webpack --config build/webpack.build.js",
-    "demo": "webpack --config build/webpack.demo.js",
+    "docs": "webpack --config build/webpack.docs.js",
     "release": "node ./build/release.js",
     "prettier": "prettier --write ."
   },

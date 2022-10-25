@@ -11,7 +11,7 @@ const output = merge(defaultConfig, {
     home: './index.js',
   },
   output: {
-    publicPath: '/IPlayer',
+    publicPath: '/',
     path: path.resolve(__dirname, '../docs'),
     filename: 'index.js',
     clean: true,
@@ -33,5 +33,4 @@ const output = merge(defaultConfig, {
   ],
 });
 
-console.log(output);
 module.exports = output;
