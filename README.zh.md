@@ -43,6 +43,44 @@ new Vue({
 }).$mount('#app');
 ```
 
+### 不同视频格式示例
+
+hls 格式：
+
+```html
+<IPlayer
+  src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+flv 格式：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-360p.flv"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+MP4 格式：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
 ## 用法
 
 ### 属性
