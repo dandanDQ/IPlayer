@@ -45,6 +45,44 @@ new Vue({
 }).$mount('#app');
 ```
 
+### Examples
+
+hls：
+
+```html
+<IPlayer
+  src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+flv：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-360p.flv"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+MP4：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
 ## Usage
 
 ### Attributes

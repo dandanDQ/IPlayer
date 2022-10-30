@@ -1,6 +1,6 @@
 # IPlayer 中文文档
 
-🤩 IPlayer —— 一个适用于 vue2 的 HLS 格式视频播放器
+🤩 IPlayer —— 基于 vue2 的 web 端视频播放器，自动识别 hls、flv、MP4 等视频格式，支持视频截图，支持自定义控制栏。
 
 ## 安装
 
@@ -41,6 +41,44 @@ Vue.use(IPlayer);
 new Vue({
   render: (h) => h(App),
 }).$mount('#app');
+```
+
+### 不同视频格式示例
+
+hls 格式：
+
+```html
+<IPlayer
+  src="https://d2zihajmogu5jn.cloudfront.net/sintel/master.m3u8"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+flv 格式：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-360p.flv"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
+```
+
+MP4 格式：
+
+```html
+<IPlayer
+  src="https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4"
+  :muted="true"
+  :step="20"
+  :controls="true"
+  :controlsList="['fastforward', 'shot', 'fullscreen', 'loop', 'rate']"
+/>
 ```
 
 ## 用法
@@ -97,15 +135,17 @@ new Vue({
 
 - [x] 将进度条挪控制栏顶部（解决小屏播放时进度条太窄问题）
 - [ ] 支持播放器颜色配置
-- [ ] 支持控制栏自定义配置（开发层面）
+- [x] 支持控制栏自定义配置（开发层面）
 - [x] 控制栏新功能
   - [x] 倍速
   - [x] 快进，快退，支持时间跨度，默认是 15s
   - [x] 自动循环
 - [ ] 进度条增加节点信息、颜色配置
-- [ ] 支持 flv 格式播放
+- [x] 支持 flv 格式播放
 - [ ] 支持配置视频右上角 Logo
 - [ ] 支持明水印配置？
+- [ ] 性能优化：打包 code split，加载按需引入
+- [ ] 增加单元测试
 - [ ] ...
 
 ## License
