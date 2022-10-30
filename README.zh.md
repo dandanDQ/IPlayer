@@ -1,6 +1,6 @@
 # IPlayer 中文文档
 
-🤩 IPlayer —— 一个适用于 vue2 的 HLS 格式视频播放器
+🤩 IPlayer —— 基于 vue2 的 web 端视频播放器，自动识别 hls、flv、MP4 等视频格式，支持视频截图，支持自定义控制栏。
 
 ## 安装
 
