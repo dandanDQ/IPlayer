@@ -155,6 +155,7 @@ import Slider from './components/Slider.vue';
 import Hls from 'hls.js';
 import Flv from 'flv.js';
 
+let player = null;
 export default {
   name: 'IPlayer',
   components: {
@@ -263,7 +264,8 @@ export default {
       rate: '1.0',
 
       pressing: false, // 是否拖动中
-      player: null,
+
+      videoType: '',
     };
   },
   mounted() {
@@ -271,7 +273,14 @@ export default {
   },
   beforeDestroy() {
     // 销毁
-    this.player?.destroy?.();
+    if (this.videoType === 'flv') {
+      player?.destroy?.();
+    }
+    if (this.videoType === 'hls') {
+      player?.destroy?.();
+    }
+    player = null;
+    clearTimeout(this.timer);
   },
   methods: {
     initMSE() {
@@ -291,10 +300,13 @@ export default {
         }
       }
 
+      this.videoType = type;
+
       switch (type) {
         case 'hls': {
           if (Hls.isSupported()) {
             const hls = new Hls();
+            player = hls;
 
             // 错误监听
             hls.on(Hls.Events.ERROR, (e, data) => {
@@ -320,7 +332,7 @@ export default {
             });
             flvPlayer.attachMediaElement(this.video);
             flvPlayer.load();
-            this.player = flvPlayer;
+            player = flvPlayer;
           }
           break;
         }
@@ -331,7 +343,6 @@ export default {
     },
     init() {
       this.initMSE();
-
       this.handleEvents();
 
       // set volume
@@ -379,7 +390,7 @@ export default {
     },
     updateStyleCurrent() {
       const ratio = this.status.currentTime / this.status.duration;
-      this.$refs['progress-bar'].updateStyleCurrent(ratio);
+      this.$refs['progress-bar']?.updateStyleCurrent?.(ratio);
     },
     handleEvents() {
       this.video.addEventListener('play', () => {
@@ -434,9 +445,7 @@ export default {
             this.status.progress = this.video.buffered.end(len - 1);
             this.updateStyleProgress();
           }
-        } catch (e) {
-          console.error(e);
-        }
+        } catch (e) {}
       });
 
       this.video.addEventListener('seeking', (e) => {
