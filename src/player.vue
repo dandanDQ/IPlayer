@@ -280,7 +280,8 @@ export default {
       player?.destroy?.();
     }
     player = null;
-    clearTimeout(this.timer);
+    if (this.timer) clearTimeout(this.timer);
+    if (this.shotImg) URL.revokeObjectURL(this.shotImg);
   },
   methods: {
     initMSE() {
